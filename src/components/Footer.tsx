@@ -2,7 +2,7 @@ interface Props {}
 
 const Footer: React.FC<Props> = ({}) => {
   return (
-    <footer>
+    <footer className="main-footer">
       <p>Do your chores, get paid.</p>
     </footer>
   );

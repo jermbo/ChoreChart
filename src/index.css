@@ -19,9 +19,32 @@
 
 html,
 body {
+  background: var(--bg);
+  margin: 0;
+}
+
+#root {
   width: 100vw;
   height: 100vh;
-  background: var(--bg);
+  display: grid;
+  grid-template-columns: 1fr 85vw 1fr;
+  grid-template-rows: 1fr 90vh 1fr;
+  grid-template-areas:
+    "header header header"
+    "sideL contents sideR"
+    "footer footer footer";
+}
+
+.main-header {
+  grid-area: header;
+}
+
+.main-content {
+  grid-area: contents;
+}
+
+.main-footer {
+  grid-area: footer;
 }
 
 p {

@@ -4,7 +4,7 @@ interface Props {}
 
 const Header: React.FC<Props> = ({}) => {
   return (
-    <header>
+    <header className="main-header">
       <nav>
         <Link to="/">Home</Link>
         <Link to="/dashboard">Dashboard</Link>
