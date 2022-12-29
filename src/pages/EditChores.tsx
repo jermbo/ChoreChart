@@ -1,11 +1,12 @@
 import { PropsWithChildren } from "react";
+import Heading from "../components/Heading";
 
 interface Props {}
 
 const EditChores: React.FC<Props> = ({}) => {
   return (
     <>
-      <p>Edit Chores</p>
+      <Heading cursive="edit" block="chores" />
     </>
   );
 };

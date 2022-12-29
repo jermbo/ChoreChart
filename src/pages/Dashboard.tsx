@@ -1,11 +1,12 @@
 import { PropsWithChildren } from "react";
+import Heading from "../components/Heading";
 
 interface Props {}
 
 const Dashboard: React.FC<Props> = ({}) => {
   return (
     <>
-      <p>Dashboard</p>
+      <Heading cursive="the" block="dashboard" />
     </>
   );
 };

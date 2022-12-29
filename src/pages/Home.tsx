@@ -1,11 +1,11 @@
-import { PropsWithChildren, ReactNode } from "react";
+import Heading from "../components/Heading";
 
 interface Props {}
 
 const Home: React.FC<Props> = ({}) => {
   return (
     <>
-      <p>Home</p>
+      <Heading />
     </>
   );
 };
