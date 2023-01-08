@@ -5,12 +5,10 @@ import {
   WeeklyChoreGroup,
   WeeklyChoreTrack,
 } from "../interfaces";
-import {
-  buildLocalData,
-  buildDailyChores,
-  getWeekData,
-  buildWeeklyChores,
-} from "../utils/utils";
+import buildDailyChores from "../utils/buildDailyChores";
+import buildLocalData from "../utils/buildLocalData";
+import buildWeeklyChores from "../utils/buildWeeklyChores";
+import getWeekData from "../utils/getWeekData";
 
 const CHORE_KEY = "chores";
 
@@ -51,37 +49,38 @@ const ChoreProvider: React.FC<Props> = ({ children }) => {
     setWeeklyTimeStamp(weekTimeStamp);
 
     let localData = getLocalData();
-    // console.log("Local Data", localData);
-    // debugger;
-
     if (!localData) {
-      const weekly = buildWeeklyChores();
-      const daily = buildDailyChores(weekInfo);
-      const newLocalData = buildLocalData({ weekTimeStamp, daily, weekly });
-      const newData = { ...newLocalData };
-      console.log("does not have local data... so build it");
-      console.log(newData);
-      localData = newData;
-      setLocalData(newData);
-      // return;
+      localData = buildInitialData({
+        weekInfo,
+        weekTimeStamp,
+      });
+      setLocalData(localData);
     }
 
     const currentWeek: WeeklyChoreGroup = localData[weekTimeStamp];
-    console.log("local data was found, checking for current week");
     if (!currentWeek) {
-      const weekly = buildWeeklyChores();
-      const daily = buildDailyChores(weekInfo);
-      const newLocalData = buildLocalData({ weekTimeStamp, daily, weekly });
-      const newData = { ...localData, ...newLocalData };
-
-      console.log("has data, but not current week, so create that week");
-      console.log(newLocalData);
-      console.log(newData);
-      setLocalData(newData);
+      buildCurrentWeek({ weekInfo, weekTimeStamp, localData });
       return;
     }
 
     setWeeklyChoreGroup(currentWeek);
+  }
+
+  // TODO: Add proper types to parameters
+  function buildInitialData({ weekInfo, weekTimeStamp }: any) {
+    const weekly = buildWeeklyChores();
+    const daily = buildDailyChores(weekInfo);
+    const newLocalData = buildLocalData({ weekTimeStamp, daily, weekly });
+    return { ...newLocalData };
+  }
+
+  // TODO: Add proper types to parameters
+  function buildCurrentWeek({ weekInfo, weekTimeStamp, localData }: any) {
+    const weekly = buildWeeklyChores();
+    const daily = buildDailyChores(weekInfo);
+    const newLocalData = buildLocalData({ weekTimeStamp, daily, weekly });
+    const newData = { ...localData, ...newLocalData };
+    setLocalData(newData);
   }
 
   function getLocalData(): ChoreGroup | null {
