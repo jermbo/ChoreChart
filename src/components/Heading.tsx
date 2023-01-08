@@ -5,7 +5,7 @@ interface Props {
   block?: string;
 }
 
-const Heading: React.FC<Props> = ({ cursive = "weekly", block = "chores" }) => {
+const Heading: React.FC<Props> = ({ cursive = "daily", block = "chores" }) => {
   const [blockyText, setBlockyText] = useState<string[]>([]);
 
   useEffect(() => {

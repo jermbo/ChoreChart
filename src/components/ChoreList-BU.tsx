@@ -1,14 +1,12 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { WeeklyChores } from "../interfaces";
+import { DailyChore } from "../interfaces";
 import { CHORES } from "../TEMP_DATA";
-import getDaysOfCurrentWeek from "../utils/getDaysOfCurrentWeek";
+import { getDaysOfCurrentWeek } from "../utils/utils";
 
 interface Props {}
 
 const ChoreList: React.FC<Props> = ({}) => {
-  const [currentWeekChores, setCurrentWeekChores] = useState<WeeklyChores[]>(
-    []
-  );
+  const [currentChores, setCurrentChores] = useState<DailyChore[]>([]);
   const [currentWeekStamp, setCurrentWeekStamp] = useState("");
 
   useEffect(() => {
@@ -18,7 +16,7 @@ const ChoreList: React.FC<Props> = ({}) => {
       completed: false,
     }));
 
-    const tempChoreList: WeeklyChores[] = CHORES.map((chore) => {
+    const tempChoreList: DailyChore[] = CHORES.map((chore) => {
       return {
         ...chore,
         weekDays: weekInfo,
@@ -29,18 +27,18 @@ const ChoreList: React.FC<Props> = ({}) => {
     const local = localStorage.getItem(weekStamp);
 
     if (local) {
-      const localChores = JSON.parse(local) as WeeklyChores[];
-      setCurrentWeekChores(localChores);
+      const localChores = JSON.parse(local) as DailyChore[];
+      setCurrentChores(localChores);
       return;
     }
     localStorage.setItem(weekStamp, JSON.stringify(tempChoreList));
-    setCurrentWeekChores(tempChoreList);
+    setCurrentChores(tempChoreList);
   }, []);
 
   const updateChoreForDay = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, checked } = e.target;
     const [weekday, choreName] = id.split("-");
-    const updatedChore: WeeklyChores[] = currentWeekChores.map((chore) => {
+    const updatedChore: DailyChore[] = currentChores.map((chore) => {
       return {
         ...chore,
         weekDays: chore.weekDays.map((day) => {
@@ -53,14 +51,14 @@ const ChoreList: React.FC<Props> = ({}) => {
         }),
       };
     });
-    setCurrentWeekChores(updatedChore);
+    setCurrentChores(updatedChore);
     localStorage.setItem(currentWeekStamp, JSON.stringify(updatedChore));
   };
 
   return (
     <table className="chores">
       <tbody>
-        {currentWeekChores.map((currentWeekChore) => {
+        {currentChores.map((currentWeekChore) => {
           return (
             <tr key={currentWeekChore.id}>
               <td>{currentWeekChore.name}</td>

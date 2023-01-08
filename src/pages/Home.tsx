@@ -1,13 +1,13 @@
-import ChoreList from "../components/ChoreList";
-import Heading from "../components/Heading";
+import ChoreListDaily from "../components/ChoreListDaily";
+import ChoreListWeekly from "../components/ChoreListWeekly";
 
 interface Props {}
 
 const Home: React.FC<Props> = ({}) => {
   return (
     <>
-      <Heading />
-      <ChoreList />
+      <ChoreListDaily />
+      <ChoreListWeekly />
     </>
   );
 };

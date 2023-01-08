@@ -1,3 +1,5 @@
+export type CHORE_TYPE = "weekly" | "daily" | "monthly";
+
 export type WeekDay =
   | "Monday"
   | "Tuesday"
