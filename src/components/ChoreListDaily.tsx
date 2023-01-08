@@ -23,12 +23,12 @@ const ChoreListDaily: React.FC<Props> = ({}) => {
       return day;
     });
 
-    const updateDay: DailyChore = {
+    const updatedChore: DailyChore = {
       ...specificChore,
       weekDays: updateWeekDayInfo,
     };
 
-    updateDailyChore(weeklyTimeStamp, updateDay);
+    updateDailyChore(weeklyTimeStamp, updatedChore);
   };
   return (
     <section>

@@ -12,13 +12,14 @@ import getWeekData from "../utils/getWeekData";
 
 const CHORE_KEY = "chores";
 
-const THE_DATE = new Date();
-// const THE_DATE = new Date(2022, 11, 11);
+// const THE_DATE = new Date();
+// const THE_DATE = new Date(2023, 0, 3);
+const THE_DATE = new Date(2022, 11, 11);
 
 interface TheChoreContext {
   weeklyChoreGroup: WeeklyChoreGroup;
   weeklyTimeStamp: string;
-  updateWeeklyChore: () => void;
+  updateWeeklyChore: (weeklyTimeStamp: string, chore: WeeklyChoreTrack) => void;
   updateDailyChore: (weeklyTimeStamp: string, chore: DailyChore) => void;
 }
 
@@ -93,20 +94,41 @@ const ChoreProvider: React.FC<Props> = ({ children }) => {
     localStorage.setItem(CHORE_KEY, JSON.stringify(data));
   }
 
-  function updateWeeklyChore(chore: WeeklyChoreTrack) {
-    console.log("update weekly chore");
-    console.log(weeklyChoreGroup);
+  function updateWeeklyChore(
+    weekTimeStamp: string,
+    updatedChore: WeeklyChoreTrack
+  ) {
+    let localData = getLocalData() || {};
+    const currentWeekData: WeeklyChoreGroup = { ...localData[weekTimeStamp] };
+    const updateWeekly = currentWeekData.weekly.map((chore) => {
+      if (chore.name == updatedChore.name) {
+        return updatedChore;
+      }
+      return chore;
+    });
+    const allUpdated: WeeklyChoreGroup = {
+      ...currentWeekData,
+      weekly: updateWeekly,
+    };
+
+    setWeeklyChoreGroup(allUpdated);
+
+    const newLocalData: ChoreGroup = {
+      ...localData,
+    };
+    newLocalData[weekTimeStamp] = allUpdated;
+    setLocalData(newLocalData);
   }
 
-  function updateDailyChore(weekTimeStamp: string, updateChore: DailyChore) {
+  function updateDailyChore(weekTimeStamp: string, updatedChore: DailyChore) {
     let localData = getLocalData() || {};
 
     // Get Specific Week Data
     const currentWeekData: WeeklyChoreGroup = { ...localData[weekTimeStamp] };
     // Update Specific Week Info
     const updateDaily = currentWeekData.daily.map((chore) => {
-      if (chore.name == updateChore.name) {
-        return updateChore;
+      if (chore.name == updatedChore.name) {
+        return updatedChore;
       }
       return chore;
     });
