@@ -8,32 +8,32 @@ import Dashboard from "./pages/Dashboard";
 import ErrorPage from "./pages/ErrorPage";
 
 function App() {
-  return (
-    <>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route
-            path="edit"
-            element={
-              <Suspense fallback={<>...</>}>
-                <EditChores />
-              </Suspense>
-            }
-          />
-          <Route
-            path="dashboard/*"
-            element={
-              <Suspense fallback={<>...</>}>
-                <Dashboard />
-              </Suspense>
-            }
-          />
-          <Route path="*" element={<ErrorPage />} />
-        </Route>
-      </Routes>
-    </>
-  );
+	return (
+		<>
+			<Routes>
+				<Route path="/" element={<Layout />}>
+					<Route index element={<Home />} />
+					<Route
+						path="edit"
+						element={
+							<Suspense fallback={<>...</>}>
+								<EditChores />
+							</Suspense>
+						}
+					/>
+					<Route
+						path="dashboard/*"
+						element={
+							<Suspense fallback={<>...</>}>
+								<Dashboard />
+							</Suspense>
+						}
+					/>
+					<Route path="*" element={<ErrorPage />} />
+				</Route>
+			</Routes>
+		</>
+	);
 }
 
 export default App;

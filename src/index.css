@@ -2,114 +2,113 @@
 *,
 *:before,
 *:after {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 :root {
-  --red: #e51c5a;
-  --orange: #ed7d2d;
-  --green: #a9bd4d;
-  --teal: #8fd1c2;
-  --pink: #f496b9;
-  --purple: #5e40af;
-  --blue: #1c5ca5;
-  --bg: #fbe6d3;
-  --gray: #4f4f4f;
+	--red: #e51c5a;
+	--orange: #ed7d2d;
+	--green: #a9bd4d;
+	--teal: #8fd1c2;
+	--pink: #f496b9;
+	--purple: #5e40af;
+	--blue: #1c5ca5;
+	--bg: #fbe6d3;
+	--gray: #4f4f4f;
 }
 
 html,
 body {
-  background: var(--bg);
-  margin: 0;
+	background: var(--bg);
+	margin: 0;
 }
 
 #root {
-  width: 100vw;
-  height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 85vw 1fr;
-  grid-template-rows: 1fr 90vh 1fr;
-  grid-template-areas:
-    "header header header"
-    "sideL contents sideR"
-    "footer footer footer";
+	width: 100vw;
+	height: 100vh;
+	display: grid;
+	grid-template-columns: 1fr 85vw 1fr;
+	grid-template-rows: 1fr 90vh 1fr;
+	grid-template-areas:
+		"header header header"
+		"sideL contents sideR"
+		"footer footer footer";
 }
 
 .main-header {
-  grid-area: header;
+	grid-area: header;
 }
 
 .main-content {
-  grid-area: contents;
+	grid-area: contents;
 }
 
 .main-footer {
-  grid-area: footer;
+	grid-area: footer;
 }
 
 p {
-  margin: 0;
+	margin: 0;
 }
 
 .headline {
-  font-size: clamp(2rem, 10vw, 6rem);
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 1rem;
+	font-size: clamp(2rem, 10vw, 6rem);
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
+	gap: 1rem;
 }
 
 .cursive {
-  font-size: inherit;
-  font-family: "Dancing Script", cursive;
-  color: var(--gray);
-  mix-blend-mode: darken;
+	font-size: inherit;
+	font-family: "Dancing Script", cursive;
+	color: var(--gray);
+	mix-blend-mode: darken;
 }
 
 .block {
-  font-size: inherit;
-  font-family: "Oswald", sans-serif;
-  position: relative;
-  display: flex;
-  color: var(--bg);
-  text-transform: uppercase;
+	font-size: inherit;
+	font-family: "Oswald", sans-serif;
+	position: relative;
+	display: flex;
+	color: var(--bg);
+	text-transform: uppercase;
 }
 
 .block span {
-  position: relative;
-  text-transform: uppercase;
-  text-shadow: -1px -1px 0 var(--purple), 1px -1px 0 var(--purple),
-    -1px 1px 0 var(--purple), 1px 1px 0 var(--purple);
+	position: relative;
+	text-transform: uppercase;
+	text-shadow: -1px -1px 0 var(--purple), 1px -1px 0 var(--purple), -1px 1px 0 var(--purple), 1px 1px 0 var(--purple);
 }
 
 .block span:after {
-  content: attr(data-heading);
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 2;
-  transform: translate(0.5vw, 0.3vh);
-  mix-blend-mode: darken;
-  opacity: 0.5;
+	content: attr(data-heading);
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 2;
+	transform: translate(0.5vw, 0.3vh);
+	mix-blend-mode: darken;
+	opacity: 0.5;
 }
 .block span:nth-child(1n + 1):after {
-  color: var(--red);
+	color: var(--red);
 }
 .block span:nth-child(2n + 2):after {
-  color: var(--orange);
+	color: var(--orange);
 }
 .block span:nth-child(3n + 3):after {
-  color: var(--green);
+	color: var(--green);
 }
 .block span:nth-child(4n + 4):after {
-  color: var(--teal);
+	color: var(--teal);
 }
 .block span:nth-child(5n + 5):after {
-  color: var(--pink);
+	color: var(--pink);
 }
 .block span:nth-child(6n + 6):after {
-  color: var(--purple);
+	color: var(--purple);
 }
 .block span:nth-child(7n + 7):after {
-  color: var(--blue);
+	color: var(--blue);
 }

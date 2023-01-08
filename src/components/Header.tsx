@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import WeekSwitcher from "./WeekSwitcher";
 
 interface Props {}
 
@@ -10,6 +11,7 @@ const Header: React.FC<Props> = ({}) => {
         <Link to="/dashboard">Dashboard</Link>
         <Link to="/edit">Edit Chores</Link>
       </nav>
+      <WeekSwitcher />
     </header>
   );
 };

@@ -6,15 +6,15 @@ import { ChoreContext } from "../context/ChoreContext";
 interface Props {}
 
 const Home: React.FC<Props> = ({}) => {
-  const { weeklyTimeStamp } = useContext(ChoreContext);
+	const { weeklyTimeStamp } = useContext(ChoreContext);
 
-  return (
-    <>
-      <p>{weeklyTimeStamp}</p>
-      <ChoreListDaily />
-      <ChoreListWeekly />
-    </>
-  );
+	return (
+		<>
+			<p>{weeklyTimeStamp}</p>
+			<ChoreListDaily />
+			<ChoreListWeekly />
+		</>
+	);
 };
 
 export default Home;

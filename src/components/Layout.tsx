@@ -3,14 +3,14 @@ import Footer from "./Footer";
 import Header from "./Header";
 
 const Layout = () => {
-  return (
-    <>
-      <Header />
-      <main className="main-content">
-        <Outlet />
-      </main>
-      <Footer />
-    </>
-  );
+	return (
+		<>
+			<Header />
+			<main className="main-content">
+				<Outlet />
+			</main>
+			<Footer />
+		</>
+	);
 };
 export default Layout;

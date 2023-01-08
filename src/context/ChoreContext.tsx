@@ -90,7 +90,6 @@ const ChoreProvider: React.FC<Props> = ({ children }) => {
   }
 
   function setLocalData(data: ChoreGroup) {
-    console.log({ data });
     localStorage.setItem(CHORE_KEY, JSON.stringify(data));
   }
 
@@ -98,7 +97,7 @@ const ChoreProvider: React.FC<Props> = ({ children }) => {
     weekTimeStamp: string,
     updatedChore: WeeklyChoreTrack
   ) {
-    let localData = getLocalData() || {};
+    const localData = getLocalData() || {};
     const currentWeekData: WeeklyChoreGroup = { ...localData[weekTimeStamp] };
     const updateWeekly = currentWeekData.weekly.map((chore) => {
       if (chore.name == updatedChore.name) {
@@ -112,16 +111,14 @@ const ChoreProvider: React.FC<Props> = ({ children }) => {
     };
 
     setWeeklyChoreGroup(allUpdated);
-
-    const newLocalData: ChoreGroup = {
-      ...localData,
-    };
-    newLocalData[weekTimeStamp] = allUpdated;
-    setLocalData(newLocalData);
+    updateLocalChores(weekTimeStamp, allUpdated);
   }
 
-  function updateDailyChore(weekTimeStamp: string, updatedChore: DailyChore) {
-    let localData = getLocalData() || {};
+  function updateDailyChore(
+    weekTimeStamp: string,
+    updatedChore: DailyChore
+  ): void {
+    const localData = getLocalData() || {};
 
     // Get Specific Week Data
     const currentWeekData: WeeklyChoreGroup = { ...localData[weekTimeStamp] };
@@ -140,11 +137,18 @@ const ChoreProvider: React.FC<Props> = ({ children }) => {
     // Update UI Store
     setWeeklyChoreGroup(allUpdated);
 
+    updateLocalChores(weekTimeStamp, allUpdated);
+  }
+
+  function updateLocalChores(
+    weekTimeStamp: string,
+    allUpdated: WeeklyChoreGroup
+  ): void {
+    const localData = getLocalData() || {};
     const newLocalData: ChoreGroup = {
       ...localData,
     };
     newLocalData[weekTimeStamp] = allUpdated;
-
     setLocalData(newLocalData);
   }
 

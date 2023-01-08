@@ -5,9 +5,9 @@ import ChoreProvider from "./context/ChoreContext";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <ChoreProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </ChoreProvider>
+	<ChoreProvider>
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
+	</ChoreProvider>
 );
