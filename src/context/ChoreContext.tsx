@@ -8,8 +8,6 @@ import getWeekData from "../utils/getWeekData";
 const CHORE_KEY = "chores";
 
 const THE_DATE = new Date();
-// const THE_DATE = new Date(2023, 0, 3);
-// const THE_DATE = new Date(2022, 11, 11);
 
 interface TheChoreContext {
 	weeklyChoreGroup: WeeklyChoreGroup;
@@ -156,7 +154,7 @@ const ChoreProvider: React.FC<Props> = ({ children }) => {
 		setAllWeeklyTimeStamps(weeks);
 	}
 
-	function updateCurrentWeek(e: ChangeEvent<HTMLInputElement>): void {
+	function updateCurrentWeek(e: ChangeEvent<HTMLSelectElement>): void {
 		setWeeklyTimeStamp(e.target.value);
 	}
 
