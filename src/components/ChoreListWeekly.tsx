@@ -36,7 +36,10 @@ const ChoreListWeekly: React.FC<Props> = ({}) => {
 							<tr key={chore.name}>
 								<td>{chore.name}</td>
 								<td>
-									<input id={chore.name} type="checkbox" checked={chore.completed} onChange={handleChoreUpdate} />
+									<div className="custom-check">
+										<input id={chore.name} type="checkbox" checked={chore.completed} onChange={handleChoreUpdate} />
+										<label htmlFor={chore.name}></label>
+									</div>
 								</td>
 							</tr>
 						);

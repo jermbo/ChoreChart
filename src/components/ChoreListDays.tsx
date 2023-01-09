@@ -13,7 +13,16 @@ const ChoreDays: React.FC<Props> = ({ days, choreName, handleChoreUpdate }) => {
 				const uniqueId = `${day.weekday}-${choreName}`;
 				return (
 					<td key={uniqueId}>
-						<input id={uniqueId} type="checkbox" onChange={handleChoreUpdate} checked={day.completed} />
+						<div className={`custom-check ${day.weekday.toLocaleLowerCase()}`}>
+							<input
+								title={uniqueId}
+								id={uniqueId}
+								type="checkbox"
+								onChange={handleChoreUpdate}
+								checked={day.completed}
+							/>
+							<label htmlFor={uniqueId}></label>
+						</div>
 					</td>
 				);
 			})}

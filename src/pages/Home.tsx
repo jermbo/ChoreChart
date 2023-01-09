@@ -10,7 +10,6 @@ const Home: React.FC<Props> = ({}) => {
 
 	return (
 		<>
-			<p>{weeklyTimeStamp}</p>
 			<ChoreListDaily />
 			<ChoreListWeekly />
 		</>

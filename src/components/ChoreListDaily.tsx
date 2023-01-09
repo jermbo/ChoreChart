@@ -34,13 +34,27 @@ const ChoreListDaily: React.FC<Props> = ({}) => {
 				<thead>
 					<tr>
 						<th>Chore Name</th>
-						<th>Monday</th>
-						<th>Tuesday</th>
-						<th>Wednesday</th>
-						<th>Thursday</th>
-						<th>Friday</th>
-						<th>Saturday</th>
-						<th>Sunday</th>
+						<th>
+							<abbr title="Monday">Mon</abbr>
+						</th>
+						<th>
+							<abbr title="Tuesday">Tue</abbr>
+						</th>
+						<th>
+							<abbr title="Wednesday">Wed</abbr>
+						</th>
+						<th>
+							<abbr title="Thursday">Thur</abbr>
+						</th>
+						<th>
+							<abbr title="Friday">Fri</abbr>
+						</th>
+						<th>
+							<abbr title="Saturday">Sat</abbr>
+						</th>
+						<th>
+							<abbr title="Sunday">Sun</abbr>
+						</th>
 					</tr>
 				</thead>
 				<tbody>

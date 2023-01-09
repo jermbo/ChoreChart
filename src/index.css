@@ -15,6 +15,7 @@
 	--blue: #1c5ca5;
 	--bg: #fbe6d3;
 	--gray: #4f4f4f;
+	--white: #f5f5f5;
 }
 
 html,
@@ -27,8 +28,9 @@ body {
 	width: 100vw;
 	height: 100vh;
 	display: grid;
-	grid-template-columns: 1fr 85vw 1fr;
-	grid-template-rows: 1fr 90vh 1fr;
+	gap: 1rem;
+	grid-template-columns: 1fr min-max(85vw, 1000px) 1fr;
+	grid-template-rows: 1fr 10fr 1fr;
 	grid-template-areas:
 		"header header header"
 		"sideL contents sideR"
@@ -37,14 +39,35 @@ body {
 
 .main-header {
 	grid-area: header;
+	display: flex;
+	justify-content: space-between;
+	padding: 0.5rem;
+}
+
+nav {
+	display: flex;
+	gap: 0.5rem;
 }
 
 .main-content {
 	grid-area: contents;
+	display: flex;
+	flex-direction: column;
 }
 
 .main-footer {
 	grid-area: footer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.main-footer p {
+	font-family: "Dancing Script", cursive;
+}
+
+.main-footer span {
+	font-family: "Oswald", sans-serif;
 }
 
 p {
@@ -111,4 +134,70 @@ p {
 }
 .block span:nth-child(7n + 7):after {
 	color: var(--blue);
+}
+
+/* ----------------------------------- */
+/* Check Box */
+.custom-check {
+	position: relative;
+}
+
+.custom-check label {
+	background-color: var(--white);
+	border-radius: 50%;
+	cursor: pointer;
+	height: 28px;
+	width: 28px;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.custom-check label:after {
+	position: absolute;
+	border: 2px solid var(--white);
+	border-top: none;
+	border-right: none;
+	content: "";
+	height: 6px;
+	left: 7px;
+	top: 8px;
+	transform: rotate(-45deg);
+	width: 12px;
+}
+
+.custom-check input:checked + label {
+	--color: var(--red);
+	background-color: var(--color);
+	border-color: var(--color);
+}
+
+.custom-check.monday input + label {
+	--color: var(--red);
+}
+.custom-check.tuesday input + label {
+	--color: var(--orange);
+}
+.custom-check.wednesday input + label {
+	--color: var(--green);
+}
+.custom-check.thursday input + label {
+	--color: var(--teal);
+}
+.custom-check.friday input + label {
+	--color: var(--pink);
+}
+.custom-check.saturday input + label {
+	--color: var(--purple);
+}
+.custom-check.sunday input + label {
+	--color: var(--blue);
+}
+
+table {
+	width: 100%;
+}
+
+th {
+	text-align: left;
 }
