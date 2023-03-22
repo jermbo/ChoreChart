@@ -1,9 +1,9 @@
 import { PropsWithChildren } from "react";
 import Heading from "../components/Heading";
 
-interface Props {}
+interface Props { }
 
-const Dashboard: React.FC<Props> = ({}) => {
+const Dashboard = ({ }: Props) => {
 	return (
 		<>
 			<Heading cursive="the" block="dashboard" />

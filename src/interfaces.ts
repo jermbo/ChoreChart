@@ -1,10 +1,11 @@
-import { WeekDay, Month, CHORE_TYPE } from "./types";
+import { WeekDay, Month, CHORE_FREQUENCY } from "./types";
 
 export interface Chore {
-	id: number;
+	id: string;
 	name: string;
+	description: string;
 	price: number;
-	type: CHORE_TYPE;
+	frequency: CHORE_FREQUENCY;
 }
 
 export interface DayInfo {

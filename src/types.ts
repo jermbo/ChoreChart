@@ -1,4 +1,4 @@
-export type CHORE_TYPE = "weekly" | "daily" | "monthly";
+export type CHORE_FREQUENCY = "weekly" | "daily" | "monthly";
 
 export type WeekDay = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday";
 

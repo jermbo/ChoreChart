@@ -2,7 +2,7 @@ import { Chore, WeeklyChoreTrack } from "../interfaces";
 import { CHORES } from "../TEMP_DATA";
 
 const buildWeeklyChores = () => {
-	const weeklyGroup: Chore[] = CHORES.filter((chore) => chore.type == "weekly");
+	const weeklyGroup: Chore[] = CHORES.filter((chore) => chore.frequency == "weekly");
 	const weeklyChores: WeeklyChoreTrack[] = weeklyGroup.map((chore) => {
 		const data: WeeklyChoreTrack = {
 			...chore,
