@@ -1,9 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Chore } from "../interfaces";
 import ChoreForm from "../components/ChoreForm";
 import Heading from "../components/Heading";
 import { storage } from "../utils/storage";
 import { CHORES } from "../TEMP_DATA";
+
+type SortField = "name" | "price" | "frequency";
+type SortOrder = "asc" | "desc";
+
+interface SortConfig {
+	field: SortField;
+	order: SortOrder;
+}
 
 interface Props {}
 
@@ -11,6 +19,11 @@ const EditChores = ({}: Props) => {
 	const [chores, setChores] = useState<Chore[]>([]);
 	const [editingChore, setEditingChore] = useState<Chore | undefined>();
 	const [isFormVisible, setIsFormVisible] = useState(false);
+	const [searchTerm, setSearchTerm] = useState("");
+	const [sortConfig, setSortConfig] = useState<SortConfig>({
+		field: "name",
+		order: "asc",
+	});
 
 	// get chores from IndexedDB
 	const getChores = async () => {
@@ -65,6 +78,44 @@ const EditChores = ({}: Props) => {
 		}
 	};
 
+	const handleSort = (field: SortField) => {
+		setSortConfig((prev) => ({
+			field,
+			order: prev.field === field && prev.order === "asc" ? "desc" : "asc",
+		}));
+	};
+
+	// Filter and sort chores
+	const filteredAndSortedChores = useMemo(() => {
+		let result = [...chores];
+
+		// Apply search filter
+		if (searchTerm) {
+			const searchLower = searchTerm.toLowerCase();
+			result = result.filter(
+				(chore) =>
+					chore.name.toLowerCase().includes(searchLower) || chore.description.toLowerCase().includes(searchLower)
+			);
+		}
+
+		// Apply sorting
+		result.sort((a, b) => {
+			if (sortConfig.field === "price") {
+				return sortConfig.order === "asc" ? a.price - b.price : b.price - a.price;
+			}
+
+			const aValue = a[sortConfig.field].toLowerCase();
+			const bValue = b[sortConfig.field].toLowerCase();
+
+			if (sortConfig.order === "asc") {
+				return aValue.localeCompare(bValue);
+			}
+			return bValue.localeCompare(aValue);
+		});
+
+		return result;
+	}, [chores, searchTerm, sortConfig]);
+
 	useEffect(() => {
 		getChores();
 	}, []);
@@ -75,12 +126,46 @@ const EditChores = ({}: Props) => {
 
 			<div className="chores-container">
 				<div className="chores-header">
-					<button className="btn" onClick={() => setIsFormVisible(true)}>
-						Add New Chore
-					</button>
-					<button className="btn" onClick={handleResetToDefault}>
-						Reset to Default
-					</button>
+					<div className="action-buttons">
+						<button className="btn" onClick={() => setIsFormVisible(true)}>
+							<span>Add New Chore</span>
+						</button>
+						<button className="btn" onClick={handleResetToDefault}>
+							<span>Reset to Default</span>
+						</button>
+					</div>
+					<div className="chores-controls">
+						<input
+							type="text"
+							placeholder="Search chores..."
+							value={searchTerm}
+							onChange={(e) => setSearchTerm(e.target.value)}
+							className="search-input"
+						/>
+						<div className="sort-buttons">
+							<button
+								className={`btn-sort ${sortConfig.field === "name" ? "active" : ""}`}
+								onClick={() => handleSort("name")}
+								title={`Sort by name ${sortConfig.field === "name" ? `(${sortConfig.order})` : ""}`}
+							>
+								<span>Name {sortConfig.field === "name" && (sortConfig.order === "asc" ? "↑" : "↓")}</span>
+							</button>
+							<button
+								className={`btn-sort ${sortConfig.field === "price" ? "active" : ""}`}
+								onClick={() => handleSort("price")}
+								title={`Sort by price ${sortConfig.field === "price" ? `(${sortConfig.order})` : ""}`}
+							>
+								<span>Price {sortConfig.field === "price" && (sortConfig.order === "asc" ? "↑" : "↓")}</span>
+							</button>
+							<button
+								className={`btn-sort ${sortConfig.field === "frequency" ? "active" : ""}`}
+								onClick={() => handleSort("frequency")}
+								title={`Sort by frequency ${sortConfig.field === "frequency" ? `(${sortConfig.order})` : ""}`}
+							>
+								<span>Frequency {sortConfig.field === "frequency" && (sortConfig.order === "asc" ? "↑" : "↓")}</span>
+							</button>
+						</div>
+					</div>
 				</div>
 
 				{(isFormVisible || editingChore) && (
@@ -89,11 +174,15 @@ const EditChores = ({}: Props) => {
 					</div>
 				)}
 
-				{chores.length == 0 && <p className="no-chores">No chores found. Add your first chore to get started!</p>}
+				{filteredAndSortedChores.length === 0 && (
+					<p className="no-chores">
+						{searchTerm ? "No chores match your search." : "No chores found. Add your first chore to get started!"}
+					</p>
+				)}
 
-				{chores.length > 0 && (
+				{filteredAndSortedChores.length > 0 && (
 					<div className="chores-grid">
-						{chores.map((chore) => (
+						{filteredAndSortedChores.map((chore) => (
 							<div key={chore.id} className="chore-card">
 								<div className="chore-header">
 									<h3>{chore.name}</h3>
