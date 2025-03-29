@@ -4,8 +4,7 @@ import buildDailyChores from "../utils/buildDailyChores";
 import buildLocalData from "../utils/buildLocalData";
 import buildWeeklyChores from "../utils/buildWeeklyChores";
 import getWeekData from "../utils/getWeekData";
-
-const CHORE_KEY = "chores";
+import { storage } from "../utils/storage";
 
 const THE_DATE = new Date();
 
@@ -41,29 +40,32 @@ const ChoreProvider: React.FC<Props> = ({ children }) => {
 	}, []);
 
 	useEffect(() => {
-		const localData = getLocalData() || {};
-		const other = localData[weeklyTimeStamp];
-		if (other) {
-			setWeeklyChoreGroup(other);
-		}
+		const loadWeekData = async () => {
+			const localData = (await storage.getChores()) || {};
+			const other = localData[weeklyTimeStamp];
+			if (other) {
+				setWeeklyChoreGroup(other);
+			}
+		};
+		loadWeekData();
 	}, [weeklyTimeStamp]);
 
-	function init(): void {
+	async function init(): Promise<void> {
 		const { weekInfo, weekTimeStamp } = getWeekData(THE_DATE);
 		setWeeklyTimeStamp(weekTimeStamp);
 
-		let localData = getLocalData();
+		let localData = await storage.getChores();
 		if (!localData) {
 			localData = buildInitialData({
 				weekInfo,
 				weekTimeStamp,
 			});
-			setLocalData(localData);
+			await storage.setChores(localData);
 		}
 
 		const currentWeek: WeeklyChoreGroup = localData[weekTimeStamp];
 		if (!currentWeek) {
-			buildCurrentWeek({ weekInfo, weekTimeStamp, localData });
+			await buildCurrentWeek({ weekInfo, weekTimeStamp, localData });
 			return;
 		}
 
@@ -71,7 +73,6 @@ const ChoreProvider: React.FC<Props> = ({ children }) => {
 		getWeeklyStamps();
 	}
 
-	// TODO: Add proper types to parameters
 	function buildInitialData({ weekInfo, weekTimeStamp }: any): ChoreGroup {
 		const weekly = buildWeeklyChores();
 		const daily = buildDailyChores(weekInfo);
@@ -79,26 +80,16 @@ const ChoreProvider: React.FC<Props> = ({ children }) => {
 		return { ...newLocalData };
 	}
 
-	// TODO: Add proper types to parameters
-	function buildCurrentWeek({ weekInfo, weekTimeStamp, localData }: any): void {
+	async function buildCurrentWeek({ weekInfo, weekTimeStamp, localData }: any): Promise<void> {
 		const weekly = buildWeeklyChores();
 		const daily = buildDailyChores(weekInfo);
 		const newLocalData = buildLocalData({ weekTimeStamp, daily, weekly });
 		const newData = { ...localData, ...newLocalData };
-		setLocalData(newData);
+		await storage.setChores(newData);
 	}
 
-	function getLocalData(): ChoreGroup | null {
-		const data = localStorage.getItem(CHORE_KEY);
-		return data ? JSON.parse(data) : null;
-	}
-
-	function setLocalData(data: ChoreGroup): void {
-		localStorage.setItem(CHORE_KEY, JSON.stringify(data));
-	}
-
-	function updateWeeklyChore(weekTimeStamp: string, updatedChore: WeeklyChoreTrack): void {
-		const localData = getLocalData() || {};
+	async function updateWeeklyChore(weekTimeStamp: string, updatedChore: WeeklyChoreTrack): Promise<void> {
+		const localData = (await storage.getChores()) || {};
 		// Get Specific Week Data
 		const currentWeekData: WeeklyChoreGroup = { ...localData[weekTimeStamp] };
 		// Update Specific Week Info
@@ -115,11 +106,11 @@ const ChoreProvider: React.FC<Props> = ({ children }) => {
 		};
 		// Update UI Store
 		setWeeklyChoreGroup(allUpdated);
-		updateLocalChores(weekTimeStamp, allUpdated);
+		await updateLocalChores(weekTimeStamp, allUpdated);
 	}
 
-	function updateDailyChore(weekTimeStamp: string, updatedChore: DailyChore): void {
-		const localData = getLocalData() || {};
+	async function updateDailyChore(weekTimeStamp: string, updatedChore: DailyChore): Promise<void> {
+		const localData = (await storage.getChores()) || {};
 		// Get Specific Week Data
 		const currentWeekData: WeeklyChoreGroup = { ...localData[weekTimeStamp] };
 		// Update Specific Week Info
@@ -136,21 +127,21 @@ const ChoreProvider: React.FC<Props> = ({ children }) => {
 		};
 		// Update UI Store
 		setWeeklyChoreGroup(allUpdated);
-		updateLocalChores(weekTimeStamp, allUpdated);
+		await updateLocalChores(weekTimeStamp, allUpdated);
 	}
 
-	function updateLocalChores(weekTimeStamp: string, allUpdated: WeeklyChoreGroup): void {
-		const localData = getLocalData() || {};
+	async function updateLocalChores(weekTimeStamp: string, allUpdated: WeeklyChoreGroup): Promise<void> {
+		const localData = (await storage.getChores()) || {};
 		const newLocalData: ChoreGroup = {
 			...localData,
 		};
 		newLocalData[weekTimeStamp] = allUpdated;
-		setLocalData(newLocalData);
+		await storage.setChores(newLocalData);
 	}
 
-	function getWeeklyStamps(): void {
-		const localStorage = getLocalData() || {};
-		const weeks = Object.keys(localStorage);
+	async function getWeeklyStamps(): Promise<void> {
+		const localData = (await storage.getChores()) || {};
+		const weeks = Object.keys(localData);
 		setAllWeeklyTimeStamps(weeks);
 	}
 
