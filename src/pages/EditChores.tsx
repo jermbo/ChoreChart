@@ -127,10 +127,10 @@ const EditChores = ({}: Props) => {
 			<div className="chores-container">
 				<div className="chores-header">
 					<div className="action-buttons">
-						<button className="btn" onClick={() => setIsFormVisible(true)}>
+						<button className="btn btn-primary" onClick={() => setIsFormVisible(true)}>
 							<span>Add New Chore</span>
 						</button>
-						<button className="btn" onClick={handleResetToDefault}>
+						<button className="btn btn-outline" onClick={handleResetToDefault}>
 							<span>Reset to Default</span>
 						</button>
 					</div>
@@ -188,10 +188,10 @@ const EditChores = ({}: Props) => {
 									<h3>{chore.name}</h3>
 									<div className="chore-actions">
 										<button className="btn-icon" onClick={() => handleEdit(chore)} title="Edit chore">
-											✎
+											<span>✎</span>
 										</button>
 										<button className="btn-icon btn-danger" onClick={() => deleteChore(chore.id)} title="Delete chore">
-											×
+											<span>×</span>
 										</button>
 									</div>
 								</div>
