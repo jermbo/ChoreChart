@@ -85,6 +85,24 @@ ChoreChart/
    npm run build
    ```
 
+### Seed Data
+
+The application comes with pre-configured seed data in `src/TEMP_DATA.ts`. This data includes:
+
+- 20 predefined chores
+- Mix of daily and weekly tasks
+- Appropriate pricing based on task complexity
+- Detailed descriptions for each chore
+
+The seed data is automatically loaded when the application starts for the first time. The data is then stored in the browser's local storage for persistence.
+
+To reset to the default seed data:
+
+1. Clear your browser's local storage for the application
+2. Refresh the page
+
+The application will automatically reinitialize with the default seed data.
+
 ## 📝 Data Model
 
 The application uses a structured data model for chores:
