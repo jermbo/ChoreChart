@@ -145,9 +145,8 @@ The Chore Chart App is a digital platform designed to help parents manage their 
 
 1. Child views assigned chores
 2. Marks chore as complete
-3. Parent receives notification
-4. Parent verifies completion
-5. Allowance updates automatically
+3. Parent verifies completion
+4. Allowance updates automatically
 
 ## 6. Non-Functional Requirements
 
@@ -173,7 +172,7 @@ The Chore Chart App is a digital platform designed to help parents manage their 
 
 ### 7.1 Phase 2 Features
 
-- Push notifications
+- Push notifications for chore completion and verification
 - Multi-level chore hierarchy
 - Mobile applications
 - Family calendar integration
@@ -185,35 +184,21 @@ The Chore Chart App is a digital platform designed to help parents manage their 
 - Parent community
 - Advanced analytics
 
-## 8. Success Metrics
+## 8. Timeline and Milestones
 
-### 8.1 User Engagement
-
-- Daily active users
-- Chore completion rate
-- Time spent in app
-
-### 8.2 Business Metrics
-
-- User retention
-- Feature adoption
-- User satisfaction
-
-## 9. Timeline and Milestones
-
-### 9.1 MVP Release
+### 8.1 MVP Release
 
 - Core authentication
 - Basic chore management
 - Simple reward system
 
-### 9.2 Phase 1 Release
+### 8.2 Phase 1 Release
 
 - Enhanced tracking
 - Improved UI/UX
 - Performance optimizations
 
-### 9.3 Phase 2 Release
+### 8.3 Phase 2 Release
 
 - Push notifications
 - Advanced features
