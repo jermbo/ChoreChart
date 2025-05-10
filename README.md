@@ -42,7 +42,7 @@ The Chore Chart app is an innovative solution designed to help parents manage th
 
 - Built using Node.js (newish) with Express/Hono (newish)
   - RESTful API architecture for efficient data exchange between client-side and server-side components
-  - Drizzle/SQLite/PostgreSQL (newish) database choice dependent on scalability needs
+  - Drizzle ORM with PostgreSQL for robust data persistence and scalability
 
 ## **Authentication**
 
@@ -63,6 +63,7 @@ To get started with this project, please ensure you have:
 
 1. Node.js (newish) installed on your machine
 2. Docker installed and running in the background
+3. PostgreSQL installed and configured
 
 Clone the repository using `git clone https://github.com/your-username/chore-chart-app.git` or download it from GitHub.
 
