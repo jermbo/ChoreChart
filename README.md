@@ -1,10 +1,10 @@
-# **Chore Chart App**
+# Chore Chart App
 
 ### Overview
 
 The Chore Chart app is an innovative solution designed to help parents manage their children's allowance money by assigning daily/weekly chores, tracking completion status, and rewarding good behavior. This application aims to create a fun and engaging way for kids to earn their allowance while promoting responsibility and learning valuable life skills.
 
-## **Features**
+## Features
 
 ### Parent Features
 
@@ -29,7 +29,7 @@ The Chore Chart app is an innovative solution designed to help parents manage th
 - Earn extra money for completing tasks above and beyond the minimum requirements
 - Visual representation of earned allowance money (e.g., a virtual piggy bank)
 
-## **Technical Requirements**
+## Technical Requirements
 
 ### Frontend
 
@@ -44,7 +44,7 @@ The Chore Chart app is an innovative solution designed to help parents manage th
   - RESTful API architecture for efficient data exchange between client-side and server-side components
   - Drizzle ORM with PostgreSQL for robust data persistence and scalability
 
-## **Authentication**
+## Authentication
 
 - Optional integration of JWT auth to secure user accounts and prevent unauthorized access
 
@@ -57,7 +57,7 @@ The Chore Chart app is an innovative solution designed to help parents manage th
 - Multi-level chore hierarchy: ability to create sub-chores and categorize tasks
   - Planned for future development to enhance the application's functionality
 
-## **Getting Started**
+## Getting Started
 
 To get started with this project, please ensure you have:
 
@@ -67,6 +67,6 @@ To get started with this project, please ensure you have:
 
 Clone the repository using `git clone https://github.com/your-username/chore-chart-app.git` or download it from GitHub.
 
-## **Acknowledgments**
+## Acknowledgments
 
 We appreciate any contributions, feedback, or suggestions that can help improve this application!
