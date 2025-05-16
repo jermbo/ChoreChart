@@ -22,13 +22,13 @@
 - [Project Documentation](#project-documentation)
 - [Acknowledgments](#acknowledgments)
 
-### Overview [↑](#table-of-contents)
+### Overview
 
 The Chore Chart app is an innovative solution designed to help parents manage their children's allowance money by assigning daily/weekly chores, tracking completion status, and rewarding good behavior. This application aims to create a fun and engaging way for kids to earn their allowance while promoting responsibility and learning valuable life skills.
 
 ## Features
 
-### Parent Features [↑](#table-of-contents)
+### Parent Features
 
 - Create an account with unique login credentials
 - Add children's profiles with customizable names and avatars
@@ -37,7 +37,7 @@ The Chore Chart app is an innovative solution designed to help parents manage th
   - Set the frequency (daily, weekly) and duration for each chore
 - Track progress: view completed tasks, earned allowance money, and child performance
 
-### Child Features [↑](#table-of-contents)
+### Child Features
 
 - Log in to their account using their unique username and password
 - View assigned chores with corresponding dollar amounts
@@ -46,31 +46,31 @@ The Chore Chart app is an innovative solution designed to help parents manage th
 - Mark completed tasks: earn allowance money for each finished chore
   - Track progress towards the base allowance amount
 
-### Reward System [↑](#table-of-contents)
+### Reward System
 
 - Earn extra money for completing tasks above and beyond the minimum requirements
 - Visual representation of earned allowance money (e.g., a virtual piggy bank)
 
 ## Technical Requirements
 
-### Frontend [↑](#table-of-contents)
+### Frontend
 
 - Built using React 19 with TanStack Query for data fetching and manipulation
   - Utilize TanStack Router for client-side routing
   - Integrate ShadCN/Origin/Tailwind CSS for a consistent design aesthetic across the application
 - Dockerized containerization ensures portability and seamless deployment
 
-### Backend [↑](#table-of-contents)
+### Backend
 
 - Built using Node.js (newish) with Express/Hono (newish)
   - RESTful API architecture for efficient data exchange between client-side and server-side components
   - Drizzle ORM with PostgreSQL for robust data persistence and scalability
 
-## Authentication [↑](#table-of-contents)
+## Authentication
 
 - Optional integration of JWT auth to secure user accounts and prevent unauthorized access
 
-### Future Features [↑](#table-of-contents)
+### Future Features
 
 ---
 
@@ -79,9 +79,9 @@ The Chore Chart app is an innovative solution designed to help parents manage th
 - Multi-level chore hierarchy: ability to create sub-chores and categorize tasks
   - Planned for future development to enhance the application's functionality
 
-## Getting Started [↑](#table-of-contents)
+## Getting Started
 
-### Prerequisites [↑](#table-of-contents)
+### Prerequisites
 
 Before you begin, ensure you have the following installed:
 
@@ -96,7 +96,7 @@ Before you begin, ensure you have the following installed:
   - TypeScript and JavaScript Language Features
   - Tailwind CSS IntelliSense
 
-### Development Environment Setup [↑](#table-of-contents)
+### Development Environment Setup
 
 1. Clone the repository:
 
@@ -131,7 +131,7 @@ Before you begin, ensure you have the following installed:
    - Frontend: http://localhost:3000
    - API: http://localhost:4000
 
-### Git Workflow [↑](#table-of-contents)
+### Git Workflow
 
 We follow a trunk-based development workflow with the following guidelines:
 
@@ -153,7 +153,7 @@ We follow a trunk-based development workflow with the following guidelines:
    - Get at least one code review approval
    - Squash and merge when ready
 
-### Commit Message Convention [↑](#table-of-contents)
+### Commit Message Convention
 
 Format: `<type>: <description>`
 
@@ -176,35 +176,35 @@ fix: resolve infinite loading issue in dashboard
 docs: update API documentation
 ```
 
-### Project Documentation [↑](#table-of-contents)
+### Project Documentation
 
 For detailed information about the project, please refer to our comprehensive documentation:
 
-#### Getting Started [↑](#table-of-contents)
+#### Getting Started
 
 - [Development Setup](./docs/DevelopmentSetup.md) - Complete setup guide for new developers
 - [Code Style Guide](./docs/CodeStyleGuide.md) - Coding standards and best practices
 
-#### Architecture & Design [↑](#table-of-contents)
+#### Architecture & Design
 
 - [App Architecture](./docs/AppArchitecture.md) - System design and technical decisions
 - [Database Schema](./docs/DatabaseSchema.md) - Database structure and relationships
 - [Authentication](./docs/Authentication.md) - Authentication flow and implementation
 - [RBAC](./docs/RBAC.md) - Role-Based Access Control system
 
-#### Technical Stack [↑](#table-of-contents)
+#### Technical Stack
 
 - [Frontend Stack](./docs/FrontendStack.md) - Frontend technologies and implementation details
 - [Backend Stack](./docs/BackendStack.md) - Backend technologies and implementation details
 - [API Documentation](./docs/API.md) - Complete API endpoints and usage
 
-#### Product [↑](#table-of-contents)
+#### Product
 
 - [Product Requirements](./docs/PRD.md) - Product requirements and specifications
 - [User Flow](./docs/UserFlow.md) - User journey and interaction flows
 
 For a complete overview of all documentation, see our [Documentation Index](./docs/INDEX.md).
 
-## Acknowledgments [↑](#table-of-contents)
+## Acknowledgments
 
 We appreciate any contributions, feedback, or suggestions that can help improve this application!
