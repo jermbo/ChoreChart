@@ -22,8 +22,8 @@ app.get("/", (c) => {
 	return c.text("Hello Hono!");
 });
 
-const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 4000;
-const host = process.env.HOST || "localhost";
+const port = process.env.API_PORT ? parseInt(process.env.API_PORT, 10) : 4000;
+const host = process.env.API_HOST || "localhost";
 
 serve(
 	{
