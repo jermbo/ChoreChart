@@ -1,0 +1,14 @@
+{
+	"Servers": {
+		"1": {
+			"Name": "ChoreChart DB",
+			"Group": "Servers",
+			"Host": "chorechart-db",
+			"Port": 5432,
+			"MaintenanceDB": "chorechart",
+			"Username": "admin",
+			"Password": "adminpass",
+			"SSLMode": "prefer"
+		}
+	}
+}
