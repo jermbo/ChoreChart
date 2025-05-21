@@ -4,14 +4,16 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 export default {
-	schema: "./src/db/schema.ts",
-	out: "./src/db/migrations",
-	driver: "pg",
-	dbCredentials: {
-		connectionString:
-			process.env.DATABASE_URL ||
-			"postgres://admin:adminpass@localhost:5432/chorechart",
-	},
-	verbose: true,
-	strict: true,
+  schema: "./src/db/schema.ts",
+  out: "./src/db/migrations",
+  dialect: "postgresql",
+  dbCredentials: {
+    host: "localhost",
+    port: 5432,
+    user: "admin",
+    password: "adminpass",
+    database: "chorechart",
+  },
+  verbose: true,
+  strict: true,
 } satisfies Config;
