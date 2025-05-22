@@ -8,9 +8,8 @@
 graph TD
     A[Landing Page] --> B[Click Register]
     B --> C[Enter Email & Password]
-    C --> D[Verify Email]
-    D --> E[Create Parent Profile]
-    E --> F[Parent Dashboard]
+    C --> D[Create Parent Profile]
+    D --> E[Parent Dashboard]
 ```
 
 ### 1.2 Parent Login
@@ -57,9 +56,9 @@ graph TD
 ```mermaid
 graph TD
     A[Dashboard] --> B[Click Manage Chores]
-    B --> C[Select Child]
-    C --> D[Add New Chore]
-    D --> E[Set Chore Details]
+    B --> C[Add New Chore]
+    C --> D[Set Chore Details]
+    D --> E[Select Children]
     E --> F[Assign Dollar Amount]
     F --> G[Set Frequency]
     G --> H[Save Chore]

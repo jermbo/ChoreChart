@@ -4,22 +4,27 @@
 
 ```mermaid
 erDiagram
-    Parent {
+    User {
         uuid id PK
         string email UK
         string password_hash
         string first_name
         string last_name
-        string role
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    Parent {
+        uuid id PK
+        uuid user_id FK
         timestamp created_at
         timestamp updated_at
     }
 
     Child {
         uuid id PK
+        uuid user_id FK
         uuid parent_id FK
-        string first_name
-        string last_name
         decimal base_allowance
         string avatar_url
         timestamp created_at
@@ -28,12 +33,19 @@ erDiagram
 
     Chore {
         uuid id PK
-        uuid child_id FK
         string title
         string description
         decimal value
         timestamp due_date
         string status
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ChoreAssignment {
+        uuid id PK
+        uuid chore_id FK
+        uuid child_id FK
         timestamp created_at
         timestamp updated_at
     }
@@ -49,8 +61,11 @@ erDiagram
         timestamp updated_at
     }
 
+    User ||--o{ Parent : "is"
+    User ||--o{ Child : "is"
     Parent ||--o{ Child : "has"
-    Child ||--o{ Chore : "assigned"
+    Child ||--o{ ChoreAssignment : "assigned"
+    Chore ||--o{ ChoreAssignment : "has"
     Child ||--o{ AllowanceTransaction : "has"
 ```
 
@@ -58,33 +73,40 @@ erDiagram
 
 ### Core Entities
 
-1. **Parent**
+1. **User**
 
-   - Primary user account
+   - Base user account
+   - Stores authentication and profile information
+   - Can be either a parent or child
+
+2. **Parent**
+
+   - Represents a parent user
    - Manages children and chores
    - Handles allowance distribution
 
-2. **Child**
+3. **Child**
 
-   - Managed by parent
+   - Represents a child user
    - Has assigned chores
    - Tracks allowance earnings
 
-3. **Chore**
+4. **Chore**
 
    - Assigned to children
    - Has monetary value
    - Tracks completion status
 
-4. **Allowance Transaction**
+5. **Allowance Transaction**
    - Records financial transactions
    - Tracks earnings and payments
    - Maintains financial history
 
 ### Relationships
 
+- One-to-One: User to Parent/Child
 - One-to-Many: Parent to Children
-- One-to-Many: Child to Chores
+- Many-to-Many: Children to Chores (via ChoreAssignment)
 - One-to-Many: Child to Allowance Transactions
 
 ## Data Integrity
@@ -103,25 +125,30 @@ erDiagram
 
 ### Constraints
 
-1. **Parent**
+1. **User**
 
    - Unique email addresses
-   - Role-based access control
    - Required personal information
+   - Secure password storage
 
-2. **Child**
+2. **Parent**
 
+   - Required user association
+   - One user can be one parent
+
+3. **Child**
+
+   - Required user association
    - Required parent association
    - Non-negative allowance values
    - Valid avatar URLs
 
-3. **Chore**
+4. **Chore**
 
-   - Required child association
    - Non-negative values
    - Valid status transitions
 
-4. **Allowance Transaction**
+5. **Allowance Transaction**
    - Required child association
    - Non-zero amounts
    - Valid transaction types
@@ -145,6 +172,7 @@ erDiagram
 
 1. **Common Queries**
 
+   - User authentication
    - Child's active chores
    - Allowance history
    - Parent's children
