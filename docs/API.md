@@ -31,11 +31,11 @@ Content-Type: application/json
 
 ```json
 {
-	"error": {
-		"code": "ERROR_CODE",
-		"message": "Human readable error message",
-		"details": {} // Optional additional error details
-	}
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human readable error message",
+    "details": {} // Optional additional error details
+  }
 }
 ```
 
@@ -60,10 +60,11 @@ Register a new parent account.
 
 ```json
 {
-	"email": "string",
-	"password": "string",
-	"firstName": "string",
-	"lastName": "string"
+  "email": "string",
+  "password": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "role": "PARENT"
 }
 ```
 
@@ -71,16 +72,25 @@ Register a new parent account.
 
 ```json
 {
-	"user": {
-		"id": "string",
-		"email": "string",
-		"firstName": "string",
-		"lastName": "string",
-		"role": "PARENT"
-	},
-	"token": "string"
+  "user": {
+    "id": "string",
+    "email": "string",
+    "firstName": "string",
+    "lastName": "string",
+    "role": "PARENT",
+    "createdAt": "string",
+    "updatedAt": "string"
+  },
+  "token": "string"
 }
 ```
+
+**Notes:**
+
+- Registration is only available for parents
+- `role` field must be set to "PARENT"
+- Children accounts can only be created by parents through the parent dashboard
+- Children can then login using their credentials
 
 #### POST /auth/login
 
@@ -90,8 +100,8 @@ Login to existing account.
 
 ```json
 {
-	"email": "string",
-	"password": "string"
+  "email": "string",
+  "password": "string"
 }
 ```
 
@@ -99,16 +109,24 @@ Login to existing account.
 
 ```json
 {
-	"user": {
-		"id": "string",
-		"email": "string",
-		"firstName": "string",
-		"lastName": "string",
-		"role": "string"
-	},
-	"token": "string"
+  "user": {
+    "id": "string",
+    "email": "string",
+    "firstName": "string",
+    "lastName": "string",
+    "role": "PARENT" | "CHILD",
+    "createdAt": "string",
+    "updatedAt": "string"
+  },
+  "token": "string"
 }
 ```
+
+**Notes:**
+
+- Login is available for both parents and children
+- The `role` in the response indicates whether the user is a parent or child
+- Frontend should redirect to appropriate dashboard based on the role
 
 ### Children
 
@@ -120,15 +138,21 @@ Get all children for authenticated parent.
 
 ```json
 {
-	"children": [
-		{
-			"id": "string",
-			"firstName": "string",
-			"lastName": "string",
-			"allowance": "number",
-			"avatar": "string"
-		}
-	]
+  "children": [
+    {
+      "id": "string",
+      "userId": "string",
+      "parentId": "string",
+      "email": "string",
+      "firstName": "string",
+      "lastName": "string",
+      "baseAllowance": "number",
+      "avatarUrl": "string",
+      "role": "CHILD",
+      "createdAt": "string",
+      "updatedAt": "string"
+    }
+  ]
 }
 ```
 
@@ -140,10 +164,12 @@ Create a new child account.
 
 ```json
 {
-	"firstName": "string",
-	"lastName": "string",
-	"allowance": "number",
-	"avatar": "string"
+  "email": "string",
+  "password": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "baseAllowance": "number",
+  "avatarUrl": "string"
 }
 ```
 
@@ -151,11 +177,17 @@ Create a new child account.
 
 ```json
 {
-	"id": "string",
-	"firstName": "string",
-	"lastName": "string",
-	"allowance": "number",
-	"avatar": "string"
+  "id": "string",
+  "userId": "string",
+  "parentId": "string",
+  "email": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "baseAllowance": "number",
+  "avatarUrl": "string",
+  "role": "CHILD",
+  "createdAt": "string",
+  "updatedAt": "string"
 }
 ```
 
@@ -168,23 +200,25 @@ Get all chores for a child.
 **Query Parameters:**
 
 - `childId` (required): string
-- `status` (optional): "PENDING" | "COMPLETED" | "VERIFIED"
+- `status` (optional): "PENDING" | "COMPLETED" | "VERIFIED" | "REJECTED"
 
 **Response:**
 
 ```json
 {
-	"chores": [
-		{
-			"id": "string",
-			"title": "string",
-			"description": "string",
-			"value": "number",
-			"dueDate": "string",
-			"status": "string",
-			"childId": "string"
-		}
-	]
+  "chores": [
+    {
+      "id": "string",
+      "title": "string",
+      "description": "string",
+      "value": "number",
+      "dueDate": "string",
+      "status": "string",
+      "childrenId": ["string"],
+      "createdAt": "string",
+      "updatedAt": "string"
+    }
+  ]
 }
 ```
 
@@ -196,11 +230,11 @@ Create a new chore.
 
 ```json
 {
-	"title": "string",
-	"description": "string",
-	"value": "number",
-	"dueDate": "string",
-	"childId": "string"
+  "title": "string",
+  "description": "string",
+  "value": "number",
+  "dueDate": "string",
+  "childrenId": ["string"]
 }
 ```
 
@@ -208,13 +242,15 @@ Create a new chore.
 
 ```json
 {
-	"id": "string",
-	"title": "string",
-	"description": "string",
-	"value": "number",
-	"dueDate": "string",
-	"status": "PENDING",
-	"childId": "string"
+  "id": "string",
+  "title": "string",
+  "description": "string",
+  "value": "number",
+  "dueDate": "string",
+  "status": "string",
+  "childrenId": ["string"],
+  "createdAt": "string",
+  "updatedAt": "string"
 }
 ```
 
@@ -226,7 +262,8 @@ Update chore status.
 
 ```json
 {
-  "status": "COMPLETED" | "VERIFIED"
+  "status": "COMPLETED" | "VERIFIED" | "REJECTED",
+  "feedback": "string"
 }
 ```
 
@@ -234,13 +271,15 @@ Update chore status.
 
 ```json
 {
-	"id": "string",
-	"title": "string",
-	"description": "string",
-	"value": "number",
-	"dueDate": "string",
-	"status": "string",
-	"childId": "string"
+  "id": "string",
+  "title": "string",
+  "description": "string",
+  "value": "number",
+  "dueDate": "string",
+  "status": "string",
+  "childrenId": ["string"],
+  "createdAt": "string",
+  "updatedAt": "string"
 }
 ```
 
@@ -262,10 +301,13 @@ Get allowance history for a child.
   "history": [
     {
       "id": "string",
+      "childId": "string",
       "amount": "number",
-      "date": "string",
-      "type": "EARNED" | "PAID",
-      "description": "string"
+      "type": "EARNED | PAID",
+      "description": "string",
+      "transactionDate": "string",
+      "createdAt": "string",
+      "updatedAt": "string"
     }
   ],
   "total": "number"
@@ -280,8 +322,8 @@ Record an allowance payment.
 
 ```json
 {
-	"amount": "number",
-	"description": "string"
+  "amount": "number",
+  "description": "string"
 }
 ```
 
@@ -289,11 +331,14 @@ Record an allowance payment.
 
 ```json
 {
-	"id": "string",
-	"amount": "number",
-	"date": "string",
-	"type": "PAID",
-	"description": "string"
+  "id": "string",
+  "childId": "string",
+  "amount": "number",
+  "type": "string",
+  "description": "string",
+  "transactionDate": "string",
+  "createdAt": "string",
+  "updatedAt": "string"
 }
 ```
 
@@ -312,9 +357,9 @@ Record an allowance payment.
 
 ```json
 {
-	"event": "string",
-	"timestamp": "string",
-	"data": {}
+  "event": "string",
+  "timestamp": "string",
+  "data": {}
 }
 ```
 
