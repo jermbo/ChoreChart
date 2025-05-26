@@ -1,7 +1,6 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import route from "./routes/route.js";
 
 const app = new Hono();
 
@@ -14,16 +13,11 @@ app.use(
   })
 );
 
-// Mount auth routes
-app.route("/", route);
+// Mount parent routes
 
 // Health check endpoint
 app.get("/health", (c) => {
   return c.json({ status: "ok" });
-});
-
-app.get("/", (c) => {
-  return c.text("Hello Hono!");
 });
 
 const port = process.env.API_PORT ? parseInt(process.env.API_PORT, 10) : 4000;

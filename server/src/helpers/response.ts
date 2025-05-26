@@ -5,13 +5,10 @@ export const successResponse = (
   data: unknown,
   status = 200
 ) => {
-  return context.json(
-    {
-      success: true,
-      data,
-    },
-    status
-  );
+  return context.json({
+    success: true,
+    data,
+  });
 };
 
 export const errorResponse = (
@@ -19,29 +16,23 @@ export const errorResponse = (
   message: string,
   status = 400
 ) => {
-  return context.json(
-    {
-      success: false,
-      error: {
-        message,
-      },
+  return context.json({
+    success: false,
+    error: {
+      message,
     },
-    status
-  );
+  });
 };
 
 export const validationErrorResponse = (
   context: Context,
   errors: { message: string }[]
 ) => {
-  return context.json(
-    {
-      success: false,
-      error: {
-        message: "Validation failed",
-        details: errors,
-      },
+  return context.json({
+    success: false,
+    error: {
+      message: "Validation failed",
+      details: errors,
     },
-    400
-  );
+  });
 };
