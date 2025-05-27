@@ -2,7 +2,6 @@ import type { Context } from "hono";
 import {
   loginSchema,
   registerSchema,
-  type ValidationResult,
   type RegisterData,
   type LoginData,
 } from "./loginSchema.js";
@@ -12,6 +11,7 @@ import {
   errorResponse,
   validationErrorResponse,
 } from "../../helpers/response.js";
+import type { ValidationResult } from "../../types/index.js";
 
 const loginService = new LoginService();
 

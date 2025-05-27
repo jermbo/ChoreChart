@@ -1,6 +1,7 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import routes from "./routes/routes.js";
 
 const app = new Hono();
 
@@ -13,7 +14,8 @@ app.use(
   })
 );
 
-// Mount parent routes
+// Mount feature routes
+app.route("/", routes);
 
 // Health check endpoint
 app.get("/health", (c) => {
