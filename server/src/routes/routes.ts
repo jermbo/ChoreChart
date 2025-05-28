@@ -1,6 +1,9 @@
 import { Hono } from "hono";
 import { login, registerParent } from "../features/login/loginController.js";
-import { createChild } from "../features/parent/childManagementController.js";
+import {
+  createChild,
+  getChildrenWithDetails,
+} from "../features/parent/childManagementController.js";
 import {
   createChore,
   deleteChore,
@@ -17,5 +20,6 @@ router.post("/createchild", createChild);
 router.post("/createchore", createChore);
 router.put("/updatechore/:id", updateChore);
 router.delete("/deletechore/:id", deleteChore);
+router.get("/getchildrenwithdetails", getChildrenWithDetails);
 
 export default router;

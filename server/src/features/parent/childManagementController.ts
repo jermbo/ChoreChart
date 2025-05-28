@@ -46,3 +46,20 @@ export const createChild = async (context: Context) => {
     );
   }
 };
+//get all child with chore and allowance details for a parent
+export const getChildrenWithDetails = async (context: Context) => {
+  try {
+    //get parent id from query parameter
+    const parentId = context.req.query("parentId");
+
+    if (!parentId) {
+      return errorResponse(context, "Parent ID is required", 400);
+    }
+
+    const children = await childService.getChildrenWithDetails(parentId);
+    return successResponse(context, { children }, 200);
+  } catch (error: unknown) {
+    console.error("Error fetching child with chore and allowance:", error);
+    return errorResponse(context, "An error occurred", 500);
+  }
+};

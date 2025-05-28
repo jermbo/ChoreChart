@@ -1,8 +1,19 @@
 import { eq } from "drizzle-orm";
-import { children, users } from "../../db/schema.js";
+import {
+  allowanceTransactions,
+  children,
+  chores,
+  users,
+  choreAssignments,
+} from "../../db/schema.js";
 import { db } from "../../db/index.js";
 import type { createChildData } from "./childSchema.js";
 import bcrypt from "bcrypt";
+import type { InferSelectModel } from "drizzle-orm";
+
+type Chore = InferSelectModel<typeof chores>;
+type ChoreAssignment = InferSelectModel<typeof choreAssignments>;
+type AllowanceTransaction = InferSelectModel<typeof allowanceTransactions>;
 
 export class childManagementService {
   async checkIfExisting(email: string) {
@@ -47,5 +58,58 @@ export class childManagementService {
 
       return newChild;
     });
+  }
+
+  async getChildrenWithDetails(parentId: string) {
+    // First get all children for the parent
+    const childrenList = await db
+      .select({
+        id: children.id,
+        userId: children.userId,
+        parentId: children.parentId,
+        baseAllowance: children.baseAllowance,
+        avatarUrl: children.avatarUrl,
+        createdAt: children.createdAt,
+        updatedAt: children.updatedAt,
+        email: users.email,
+        firstName: users.firstName,
+        lastName: users.lastName,
+      })
+      .from(children)
+      .innerJoin(users, eq(children.userId, users.id))
+      .where(eq(children.parentId, parentId));
+
+    // For each child, get their chores and allowance transactions
+    const childrenWithDetails = await Promise.all(
+      childrenList.map(async (child) => {
+        // Get chores
+        const childChores = await db
+          .select({
+            id: chores.id,
+            title: chores.title,
+            description: chores.description,
+            value: chores.value,
+            dueDate: chores.dueDate,
+            status: choreAssignments.status,
+          })
+          .from(choreAssignments)
+          .innerJoin(chores, eq(choreAssignments.choreId, chores.id))
+          .where(eq(choreAssignments.childId, child.id));
+
+        // Get allowance transactions
+        const transactions = await db
+          .select()
+          .from(allowanceTransactions)
+          .where(eq(allowanceTransactions.childId, child.id));
+
+        return {
+          ...child,
+          chores: childChores,
+          allowanceTransactions: transactions,
+        };
+      })
+    );
+
+    return childrenWithDetails;
   }
 }
