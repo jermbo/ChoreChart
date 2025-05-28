@@ -4,8 +4,9 @@ import * as schema from "./schema.js";
 
 // Initialize the connection pool
 const pool = new Pool({
-	connectionString: process.env.DATABASE_URL,
-	max: 10,
+  connectionString: process.env.DATABASE_URL,
+  max: 10,
+  ssl: false,
 });
 
 // Create the database instance

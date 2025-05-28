@@ -8,11 +8,12 @@ export default {
   out: "./src/db/migrations",
   dialect: "postgresql",
   dbCredentials: {
-    host: "localhost",
+    host: "postgres",
     port: 5432,
     user: "admin",
     password: "adminpass",
     database: "chorechart",
+    ssl: false,
   },
   verbose: true,
   strict: true,
