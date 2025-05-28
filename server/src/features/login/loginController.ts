@@ -12,20 +12,9 @@ import {
   validationErrorResponse,
 } from "../../helpers/response.js";
 import type { ValidationResult } from "../../types/index.js";
+import { validateRequestFormat } from "../../helpers/validation.js";
 
 const loginService = new LoginService();
-
-// Validation helper function
-const validateRequestFormat = <T>(
-  data: unknown,
-  schema: any
-): ValidationResult<T> => {
-  const result = schema.safeParse(data);
-  if (result.success) {
-    return { success: true, data: result.data };
-  }
-  return { success: false, error: result.error };
-};
 
 export const registerParent = async (context: Context) => {
   try {
