@@ -49,7 +49,6 @@ export const chores = pgTable("chores", {
   description: text("description"),
   value: decimal("value", { precision: 10, scale: 2 }).notNull(),
   dueDate: timestamp("due_date").notNull(),
-  status: varchar("status", { length: 50 }).notNull().default("pending"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -62,6 +61,7 @@ export const choreAssignments = pgTable("chore_assignments", {
   childId: uuid("child_id")
     .references(() => children.id)
     .notNull(),
+  status: varchar("status", { length: 50 }).notNull().default("pending"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
