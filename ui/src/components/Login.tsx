@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
+import { useRouter } from '@tanstack/react-router'
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const { login, isLoading, error, isError } = useAuth()
+  const router = useRouter()
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
     login({ email, password })
+    router.navigate({ to: '/parentDashboard' })
   }
 
   const handleRegister = () => {

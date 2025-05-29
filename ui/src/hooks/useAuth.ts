@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { api } from '../services/api'
+import { useUserContext } from '../context/userContext'
 
 interface LoginCredentials {
   email: string
@@ -22,13 +23,11 @@ const loginUser = async (
 }
 
 export const useAuth = () => {
+  const { setUser } = useUserContext()
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      // Store the token in localStorage or your preferred storage
-      localStorage.setItem('token', data.token)
-      // You can also store user data if needed
-      localStorage.setItem('user', JSON.stringify(data.user))
+      setUser(data.user)
     },
   })
 
