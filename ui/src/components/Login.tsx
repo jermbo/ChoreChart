@@ -1,22 +1,22 @@
 import React, { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
-import { useRouter } from '@tanstack/react-router'
+import { useRouter, useSearch } from '@tanstack/react-router'
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const { login, isLoading, error, isError } = useAuth()
   const router = useRouter()
+  const search = useSearch({ from: '/', strict: false })
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
     login({ email, password })
-    router.navigate({ to: '/parentDashboard' })
+    router.navigate({ to: '/parentDashboard', search: { message: undefined } })
   }
 
   const handleRegister = () => {
-    // TODO: Implement register navigation
-    console.log('Navigate to register page')
+    router.navigate({ to: '/register' })
   }
 
   return (
@@ -34,6 +34,11 @@ const Login: React.FC = () => {
             {error instanceof Error
               ? error.message
               : 'An error occurred during login'}
+          </div>
+        )}
+        {search?.message && (
+          <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+            {search.message}
           </div>
         )}
 
