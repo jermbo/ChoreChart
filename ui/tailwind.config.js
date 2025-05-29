@@ -20,10 +20,11 @@ export default {
           600: '#9333EA',
         },
         'pastel-pink': {
-          300: '#FBCFE8',
-          400: '#F9A8D4',
-          500: '#F472B6',
-          600: '#EC4899',
+          300: '#FFC0CB',  // Baby pink
+          400: '#FFB6C1',  // Light pink
+          500: '#FFA7B5',  // Soft pink
+          600: '#FF8DA1',  // Medium pink
+          700: '#FF7A8F',  // Deep pink
         },
       },
     },
