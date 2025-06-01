@@ -1,5 +1,5 @@
 import { db } from "../../db/index.js";
-import { users, parents } from "../../db/schema.js";
+import { users, parents, children } from "../../db/schema.js";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import type { LoginData, RegisterData } from "./loginSchema.js";
@@ -62,23 +62,25 @@ export class LoginService {
     if (!isValidPassword) {
       throw new Error("Invalid credentials");
     }
-
     // 3. Find parent record
     const parent = await db.query.parents.findFirst({
       where: eq(parents.userId, user.id),
     });
+    //if parent details is not found the check child details. he might be a child
+    const child = await db.query.children.findFirst({
+      where: eq(children.userId, user.id),
+    });
 
-    if (!parent) {
-      throw new Error("Parent record not found");
+    if (!parent && !child) {
+      throw new Error("Parent or child record not found");
     }
 
     // 4. Return user data and token
     const { passwordHash: _, ...userWithoutPassword } = user;
     return {
-      user: {
-        ...userWithoutPassword,
-        parentId: parent.id,
-      },
+      ...userWithoutPassword,
+      parentId: parent?.id ?? child?.parentId,
+      childId: child?.id ?? null,
     };
   }
 }

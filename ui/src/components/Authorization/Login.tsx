@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../../hooks/useAuth'
 import { useRouter, useSearch } from '@tanstack/react-router'
 
 const Login: React.FC = () => {
@@ -7,12 +7,12 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('')
   const { login, isLoading, error, isError } = useAuth()
   const router = useRouter()
+
   const search = useSearch({ from: '/', strict: false })
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
     login({ email, password })
-    router.navigate({ to: '/parentDashboard', search: { message: undefined } })
   }
 
   const handleRegister = () => {

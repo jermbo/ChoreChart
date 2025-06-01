@@ -1,6 +1,11 @@
 import type { Context } from "hono";
 import { validateRequestFormat } from "../../helpers/validation.js";
-import { createChildSchema, type createChildData } from "./childSchema.js";
+import {
+  createChildSchema,
+  updateChildSchema,
+  type createChildData,
+  type updateChildData,
+} from "./childSchema.js";
 import {
   errorResponse,
   successResponse,
@@ -20,30 +25,17 @@ export const createChild = async (context: Context) => {
       return validationErrorResponse(context, validationResult.error.errors);
     }
 
-    //check existing child
     const { email } = validationResult.data;
     const isExisting = await childService.checkIfExisting(email);
-    //check if child already present
     if (isExisting) {
-      return errorResponse(context, "Child already exists", 400);
+      throw new Error("Child already exists");
     }
-    const child = await childService.createChild(validationResult.data);
 
-    return successResponse(
-      context,
-      {
-        message: "Child created successful",
-        child,
-      },
-      201
-    );
+    const child = await childService.createChild(validationResult.data);
+    return successResponse(context, child, 201);
   } catch (error: unknown) {
-    console.error("Child registration error:", error);
-    return errorResponse(
-      context,
-      "An error occurred during child registration",
-      500
-    );
+    console.error("Error creating child:", error);
+    return errorResponse(context, "An error occurred", 500);
   }
 };
 //get all child with chore and allowance details for a parent
@@ -57,9 +49,43 @@ export const getChildrenWithDetails = async (context: Context) => {
     }
 
     const children = await childService.getChildrenWithDetails(parentId);
-    return successResponse(context, { children }, 200);
+    return successResponse(context, children, 200);
   } catch (error: unknown) {
     console.error("Error fetching child with chore and allowance:", error);
+    return errorResponse(context, "An error occurred", 500);
+  }
+};
+
+//update child
+export const updateChild = async (context: Context) => {
+  try {
+    const requestBody = await context.req.json();
+    const validationResult = validateRequestFormat<updateChildData>(
+      requestBody,
+      updateChildSchema
+    );
+    if (!validationResult.success) {
+      return validationErrorResponse(context, validationResult.error.errors);
+    }
+    const child = await childService.updateChild(validationResult.data);
+    return successResponse(context, child, 200);
+  } catch (error: unknown) {
+    console.error("Error updating child:", error);
+    return errorResponse(context, "An error occurred", 500);
+  }
+};
+
+//delete child
+export const deleteChild = async (context: Context) => {
+  try {
+    const id = context.req.param("id");
+    if (!id) {
+      return errorResponse(context, "Child ID is required", 400);
+    }
+    const child = await childService.deleteChild(id);
+    return successResponse(context, child, 200);
+  } catch (error: unknown) {
+    console.error("Error deleting child:", error);
     return errorResponse(context, "An error occurred", 500);
   }
 };

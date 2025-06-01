@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 import { api } from '../services/api'
 import { useUserContext } from '../context/userContext'
 import type { User } from '../types'
+import { useRouter } from '@tanstack/react-router'
 
 interface LoginCredentials {
   email: string
@@ -16,14 +17,18 @@ interface RegisterData {
 }
 
 interface AuthResponse {
-  token: string
-  user: User
+  data: {
+    message: string
+    user: User
+  }
+  success: boolean
 }
 
 const loginUser = async (
   credentials: LoginCredentials,
-): Promise<AuthResponse> => {
-  return api.post<AuthResponse>('/login', credentials)
+): Promise<AuthResponse['data']> => {
+  const response = await api.post<AuthResponse>('/login', credentials)
+  return response.data
 }
 
 const registerParent = async (data: RegisterData): Promise<AuthResponse> => {
@@ -34,12 +39,24 @@ const registerParent = async (data: RegisterData): Promise<AuthResponse> => {
 }
 
 export const useAuth = () => {
-  const { setUser } = useUserContext()
+  const { saveUserDetails } = useUserContext()
+  const router = useRouter()
 
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      setUser(data.user)
+      if (!data || !data.user) {
+        console.error('User data is missing from the response')
+        return
+      }
+      saveUserDetails(data.user)
+      router.navigate({
+        to: '/parentDashboard',
+        search: { message: undefined },
+      })
+    },
+    onError: (error) => {
+      console.error('Login error:', error)
     },
   })
 

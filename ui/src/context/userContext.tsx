@@ -4,6 +4,7 @@ import type { User } from '../types'
 interface UserContextType {
   user: User | null
   setUser: React.Dispatch<React.SetStateAction<User | null>>
+  saveUserDetails: (user: User) => void
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined)
@@ -13,9 +14,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null)
+  const saveUserDetails = (user: User) => {
+    setUser(user)
+  }
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, saveUserDetails }}>
       {children}
     </UserContext.Provider>
   )
