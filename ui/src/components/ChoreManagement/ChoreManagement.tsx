@@ -4,6 +4,7 @@ import { AssignChoreDialog } from './AssignChoreDialog'
 import type { Chore } from '../../types/index'
 import { useChore } from '../../hooks/useChore'
 import { useRouter } from '@tanstack/react-router'
+import { formatDate } from '@/utility/utils'
 
 export const ChoreManagement: React.FC = () => {
   const router = useRouter()
@@ -85,15 +86,6 @@ export const ChoreManagement: React.FC = () => {
     } catch (error) {
       console.error('Error assigning chore:', error)
     }
-  }
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    })
   }
 
   const handleBackToDashboard = () => {

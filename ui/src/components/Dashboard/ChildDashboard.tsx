@@ -3,6 +3,7 @@ import { useRouter } from '@tanstack/react-router'
 import { useUserContext } from '@/context/userContext'
 import { useChildDashboard } from '@/hooks/useChildDashboard'
 import type { Chore } from '@/types'
+import { formatDate } from '@/utility/utils'
 
 const ChildDashboard: React.FC = () => {
   const router = useRouter()
@@ -43,15 +44,6 @@ const ChildDashboard: React.FC = () => {
       default:
         return 'bg-gray-100 text-gray-800'
     }
-  }
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    })
   }
 
   if (isLoading) {
