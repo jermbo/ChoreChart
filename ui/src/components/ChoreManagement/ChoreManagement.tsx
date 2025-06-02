@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import { ChoreDialog } from './ChoreDialog'
 import { AssignChoreDialog } from './AssignChoreDialog'
 import type { Chore } from '../../types/index'
-import { useChore } from '@/hooks/useChore'
+import { useChore } from '../../hooks/useChore'
+import { useRouter } from '@tanstack/react-router'
 
 export const ChoreManagement: React.FC = () => {
+  const router = useRouter()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [selectedChore, setSelectedChore] = useState<Chore | undefined>()
   const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false)
@@ -94,6 +96,10 @@ export const ChoreManagement: React.FC = () => {
     })
   }
 
+  const handleBackToDashboard = () => {
+    router.navigate({ to: '/parentdashboard' })
+  }
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[200px]">
@@ -104,6 +110,7 @@ export const ChoreManagement: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <button onClick={handleBackToDashboard}>Back to dashboard</button>
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Chore Management</h2>
         <button

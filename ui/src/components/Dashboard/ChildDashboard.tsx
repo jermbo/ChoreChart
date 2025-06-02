@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouter } from '@tanstack/react-router'
 
-const Parent: React.FC = () => {
+const ChildDashboard: React.FC = () => {
   const router = useRouter()
 
   const handleChildManagement = () => {
@@ -18,7 +18,7 @@ const Parent: React.FC = () => {
 
   return (
     <div>
-      <h1>Parent</h1>
+      <h1>Child</h1>
       <div className="flex gap-2">
         <button
           className="bg-blue-500 text-white p-2 rounded-md"
@@ -43,4 +43,4 @@ const Parent: React.FC = () => {
   )
 }
 
-export default Parent
+export default ChildDashboard

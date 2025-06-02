@@ -5,13 +5,14 @@ import {
   createRouter,
 } from '@tanstack/react-router'
 import Login from '../components/Authorization/Login'
-import Parent from '../components/ParentDashboard/Parent'
+import ParentDashboard from '../components/Dashboard/ParentDashboard'
 import RegisterParent from '../components/Authorization/RegisterParent'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { UserProvider } from '../context/userContext'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { ChildManagement } from '../components/ChildManagement/ChildManagement'
 import { ChoreManagement } from '../components/ChoreManagement/ChoreManagement'
+import ChildDashboard from '../components/Dashboard/ChildDashboard'
 
 const queryClient = new QueryClient()
 
@@ -47,7 +48,13 @@ const parentDashboardRoute = createRoute({
   validateSearch: (search: Record<string, unknown>) => ({
     message: (search.message as string) || undefined,
   }),
-  component: Parent,
+  component: ParentDashboard,
+})
+
+const childDashboardRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/childDashboard',
+  component: ChildDashboard,
 })
 
 const childRoute = createRoute({
@@ -66,6 +73,7 @@ const routeTree = rootRoute.addChildren([
   loginRoute,
   registerRoute,
   parentDashboardRoute,
+  childDashboardRoute,
   childRoute,
   choreRoute,
 ])

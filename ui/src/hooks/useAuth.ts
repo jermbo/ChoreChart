@@ -50,10 +50,15 @@ export const useAuth = () => {
         return
       }
       saveUserDetails(data.user)
-      router.navigate({
-        to: '/parentDashboard',
-        search: { message: undefined },
-      })
+      if (data.user.role === 'PARENT') {
+        router.navigate({
+          to: '/parentdashboard',
+        })
+      } else {
+        router.navigate({
+          to: '/childDashboard',
+        })
+      }
     },
     onError: (error) => {
       console.error('Login error:', error)
