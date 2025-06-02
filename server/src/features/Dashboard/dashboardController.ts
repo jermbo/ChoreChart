@@ -1,40 +1,41 @@
 import type { Context } from "hono";
 import { DashboardService } from "./dashboardService.js";
-import {
-  ChildDashboardResponseSchema,
-  ParentDashboardResponseSchema,
-} from "./dashboardSchema.js";
 
-export async function getChildDashboard(c: Context) {
+export async function getChildDashboard(context: Context) {
   try {
-    const childId = c.get("user")?.childId;
+    const childId = context.req.param("childId");
+
     if (!childId) {
-      return c.json({ error: "Access denied. Not a child account." }, 403);
+      return context.json(
+        { error: "Access denied. Not a child account." },
+        403
+      );
     }
 
     const dashboard = await DashboardService.getChildDashboard(childId);
-    const validatedData = ChildDashboardResponseSchema.parse(dashboard);
-
-    return c.json(validatedData);
+    return context.json(dashboard, 200);
   } catch (error) {
     console.error("Error fetching child dashboard:", error);
-    return c.json({ error: "Internal server error" }, 500);
+    return context.json({ error: "Internal server error" }, 500);
   }
 }
 
-export async function getParentDashboard(c: Context) {
+export async function getParentDashboard(context: Context) {
   try {
-    const parentId = c.get("user")?.parentId;
+    const parentId = context.req.param("parentId");
+
     if (!parentId) {
-      return c.json({ error: "Access denied. Not a parent account." }, 403);
+      return context.json(
+        { error: "Access denied. Not a parent account." },
+        403
+      );
     }
 
     const dashboard = await DashboardService.getParentDashboard(parentId);
-    const validatedData = ParentDashboardResponseSchema.parse(dashboard);
 
-    return c.json(validatedData);
+    return context.json(dashboard);
   } catch (error) {
     console.error("Error fetching parent dashboard:", error);
-    return c.json({ error: "Internal server error" }, 500);
+    return context.json({ error: "Internal server error" }, 500);
   }
 }

@@ -37,7 +37,7 @@ router.delete("/deletechore/:id", deleteChore);
 router.post("/assignchore", assignChore);
 
 // Dashboard routes
-router.get("/childdashboard", getChildDashboard);
-router.get("/parentdashboard", getParentDashboard);
+router.get("/childdashboard/:childId", getChildDashboard);
+router.get("/parentdashboard/:parentId", getParentDashboard);
 
 export default router;

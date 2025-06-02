@@ -1,12 +1,6 @@
 import { db } from "../../db/index.js";
 import { chores, children, choreAssignments, users } from "../../db/schema.js";
 import { eq, and, desc, sql } from "drizzle-orm";
-import type {
-  Chore,
-  Child,
-  ChoreAssignment,
-  ActivityLog,
-} from "./dashboardSchema.js";
 
 export class DashboardService {
   static async getChildDashboard(childId: string) {
@@ -18,32 +12,8 @@ export class DashboardService {
       .where(eq(choreAssignments.childId, childId))
       .orderBy(desc(chores.dueDate));
 
-    // Calculate stats
-    const stats = {
-      totalChores: childChores.length,
-      completedChores: childChores.filter(
-        (c) => c.chore_assignments.status === "completed"
-      ).length,
-      pendingChores: childChores.filter(
-        (c) => c.chore_assignments.status === "pending"
-      ).length,
-      inProgressChores: childChores.filter(
-        (c) => c.chore_assignments.status === "in_progress"
-      ).length,
-      verifiedChores: childChores.filter(
-        (c) => c.chore_assignments.status === "verified"
-      ).length,
-      totalEarnings: childChores
-        .filter((c) => c.chore_assignments.status === "verified")
-        .reduce((sum, c) => sum + Number(c.chores.value), 0),
-      recentActivity: [],
-      // recentActivity: await this.getChildRecentActivity(childId),
-    };
-
-    return {
-      stats,
-      chores: childChores.map((c) => c.chores),
-    };
+    const choresData = childChores.map((c) => c.chores);
+    return choresData;
   }
 
   static async getParentDashboard(parentId: string) {
@@ -108,22 +78,4 @@ export class DashboardService {
       // await this.getParentRecentActivity(parentId),
     };
   }
-
-  // private static async getChildRecentActivity(childId: string) {
-  //   return await db
-  //     .select()
-  //     .from(activityLogs)
-  //     .where(eq(activityLogs.childId, childId))
-  //     .orderBy(desc(activityLogs.timestamp))
-  //     .limit(10);
-  // }
-
-  // private static async getParentRecentActivity(parentId: string) {
-  //   return await db
-  //     .select()
-  //     .from(activityLogs)
-  //     .where(eq(activityLogs.parentId, parentId))
-  //     .orderBy(desc(activityLogs.timestamp))
-  //     .limit(10);
-  // }
 }

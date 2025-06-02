@@ -4,13 +4,15 @@ import type { Chore } from '@/types'
 
 interface UseChildChoresProps {
   childId?: string
-  status?: Chore['status']
 }
 
-export const useChildDashboard = ({
-  childId,
-  status,
-}: UseChildChoresProps = {}) => {
+const getChildDashboard = async (
+  childId: string | undefined,
+): Promise<Chore[]> => {
+  return await api.get<Chore[]>(`/childdashboard/${childId}`)
+}
+
+export const useChildDashboard = ({ childId }: UseChildChoresProps = {}) => {
   const queryClient = useQueryClient()
 
   const {
@@ -18,13 +20,9 @@ export const useChildDashboard = ({
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['childChores', childId, status],
+    queryKey: ['childChores', childId],
     queryFn: async () => {
-      const { data, error } = await api.get(
-        `/chores/child/${childId}${status ? `?status=${status}` : ''}`,
-      )
-      if (error) throw error
-      return data as Chore[]
+      return await getChildDashboard(childId)
     },
     enabled: !!childId,
   })
@@ -37,7 +35,7 @@ export const useChildDashboard = ({
       choreId: string
       status: Chore['status']
     }) => {
-      const { data, error } = await api.patch(`/chores/${choreId}/status`, {
+      const { data, error } = await api.put(`/updatechore/${choreId}`, {
         status,
       })
       if (error) throw error

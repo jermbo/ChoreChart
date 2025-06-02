@@ -12,8 +12,7 @@ const ChildDashboard: React.FC = () => {
   )
 
   const { chores, isLoading, error, updateStatus } = useChildDashboard({
-    childId: user?.childId,
-    status: selectedStatus === 'all' ? undefined : selectedStatus,
+    childId: user?.childId || undefined,
   })
 
   const handleHome = () => {
@@ -119,7 +118,7 @@ const ChildDashboard: React.FC = () => {
               <span
                 className={`px-2 py-1 rounded-full text-sm ${getStatusColor(chore.status)}`}
               >
-                {chore.status.replace('_', ' ')}
+                {chore.status?.replace('_', ' ')}
               </span>
             </div>
 
