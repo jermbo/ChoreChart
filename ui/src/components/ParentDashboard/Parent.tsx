@@ -12,6 +12,10 @@ const Parent: React.FC = () => {
     router.navigate({ to: '/' })
   }
 
+  const handleChoreManagement = () => {
+    router.navigate({ to: '/choreManagement' })
+  }
+
   return (
     <div>
       <h1>Parent</h1>
@@ -27,6 +31,12 @@ const Parent: React.FC = () => {
           onClick={handleChildManagement}
         >
           Child Management
+        </button>
+        <button
+          className="bg-blue-500 text-white p-2 rounded-md"
+          onClick={handleChoreManagement}
+        >
+          Chore Management
         </button>
       </div>
     </div>

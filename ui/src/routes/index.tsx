@@ -11,6 +11,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { UserProvider } from '../context/userContext'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { ChildManagement } from '../components/ChildManagement/ChildManagement'
+import { ChoreManagement } from '../components/ChoreManagement/ChoreManagement'
 
 const queryClient = new QueryClient()
 
@@ -55,11 +56,18 @@ const childRoute = createRoute({
   component: ChildManagement,
 })
 
+const choreRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/choreManagement',
+  component: ChoreManagement,
+})
+
 const routeTree = rootRoute.addChildren([
   loginRoute,
   registerRoute,
   parentDashboardRoute,
   childRoute,
+  choreRoute,
 ])
 
 export const router = createRouter({

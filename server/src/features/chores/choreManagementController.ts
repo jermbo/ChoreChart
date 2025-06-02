@@ -19,6 +19,21 @@ import { ChoreManagementService } from "./choreManagementService.js";
 
 const choreService = new ChoreManagementService();
 
+export const getAllChores = async (context: Context) => {
+  try {
+    const chores = await choreService.getAllChores();
+    console.log(chores);
+    return successResponse(context, chores, 200);
+  } catch (error: unknown) {
+    console.error("Chore retrieval error:", error);
+    return errorResponse(
+      context,
+      "An error occurred during chore retrieval",
+      500
+    );
+  }
+};
+
 export const createChore = async (context: Context) => {
   try {
     const requestBody = await context.req.json();

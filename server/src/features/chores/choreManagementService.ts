@@ -1,5 +1,5 @@
-import { eq, and } from "drizzle-orm";
-import { chores, choreAssignments } from "../../db/schema.js";
+import { eq, and, desc } from "drizzle-orm";
+import { chores, choreAssignments, users } from "../../db/schema.js";
 import { db } from "../../db/index.js";
 import type {
   CreateChoreData,
@@ -13,6 +13,30 @@ type ChoreAssignment = InferSelectModel<typeof choreAssignments>;
 type Chore = InferSelectModel<typeof chores>;
 
 export class ChoreManagementService {
+  async getAllChores() {
+    const choresWithAssignments = await db
+      .select()
+      .from(chores)
+      .leftJoin(choreAssignments, eq(chores.id, choreAssignments.choreId))
+      .leftJoin(users, eq(choreAssignments.childId, users.id))
+      .orderBy(desc(chores.dueDate));
+    //convert into model - title,description,AssignedTo:[{name:user1},{name:user2}]
+    const choresWithAssignmentsModel = choresWithAssignments.map((chore) => {
+      return {
+        title: chore.chores.title,
+        description: chore.chores.description,
+        value: chore.chores.value,
+        dueDate: chore.chores.dueDate,
+        assignedTo: chore.users?.map((user) => ({
+          name: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          id: user.id,
+        })),
+      };
+    });
+    return choresWithAssignmentsModel;
+  }
+
   async createChore(data: CreateChoreData) {
     return await db.transaction(async (tx) => {
       // 1. Create the chore
