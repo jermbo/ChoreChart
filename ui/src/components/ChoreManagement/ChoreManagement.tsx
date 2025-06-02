@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { ChoreDialog } from './ChoreDialog'
+import { AssignChoreDialog } from './AssignChoreDialog'
 import type { Chore } from '../../types/index'
 import { useChore } from '@/hooks/useChore'
 
@@ -10,19 +11,15 @@ export const ChoreManagement: React.FC = () => {
   const [selectedChoreForAssignment, setSelectedChoreForAssignment] = useState<
     Chore | undefined
   >()
-  const [selectedChildId, setSelectedChildId] = useState<string>('')
 
   const {
     chores,
-    assignments,
     isLoading,
     error,
     createChore,
     updateChore,
     deleteChore,
     assignChore,
-    unassignChore,
-    updateChoreStatus,
   } = useChore()
 
   const handleAddChore = () => {
@@ -55,7 +52,7 @@ export const ChoreManagement: React.FC = () => {
           title: choreData.title,
           description: choreData.description,
           value: choreData.value,
-          dueDate: choreData.due_date,
+          dueDate: choreData.dueDate,
           childrenId: [], // TODO: Add support for multiple children
         })
       } else {
@@ -63,7 +60,7 @@ export const ChoreManagement: React.FC = () => {
           title: choreData.title,
           description: choreData.description,
           value: choreData.value,
-          dueDate: choreData.due_date,
+          dueDate: choreData.dueDate,
           childrenId: [], // TODO: Add support for multiple children
         })
       }
@@ -73,22 +70,16 @@ export const ChoreManagement: React.FC = () => {
     }
   }
 
-  const handleAssignChore = async (chore: Chore) => {
+  const handleAssignChore = (chore: Chore) => {
     setSelectedChoreForAssignment(chore)
     setIsAssignDialogOpen(true)
   }
 
-  const handleSaveAssignment = async () => {
-    if (!selectedChoreForAssignment || !selectedChildId) return
-
+  const handleSaveAssignment = async (choreId: string, childIds: string[]) => {
     try {
-      await assignChore({
-        choreId: selectedChoreForAssignment.id,
-        childId: selectedChildId,
-      })
+      await assignChore({ choreId, childIds })
       setIsAssignDialogOpen(false)
       setSelectedChoreForAssignment(undefined)
-      setSelectedChildId('')
     } catch (error) {
       console.error('Error assigning chore:', error)
     }
@@ -182,47 +173,12 @@ export const ChoreManagement: React.FC = () => {
         chore={selectedChore}
       />
 
-      {isAssignDialogOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4">Assign Chore</h2>
-            <div className="space-y-4">
-              <div>
-                <label
-                  htmlFor="child-select"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Select Child
-                </label>
-                <select
-                  id="child-select"
-                  value={selectedChildId}
-                  onChange={(e) => setSelectedChildId(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pastel-blue-500"
-                >
-                  <option value="">Select a child...</option>
-                  {/* TODO: Add child options here */}
-                </select>
-              </div>
-              <div className="flex justify-end gap-2">
-                <button
-                  onClick={() => setIsAssignDialogOpen(false)}
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSaveAssignment}
-                  disabled={!selectedChildId}
-                  className="px-4 py-2 bg-gradient-to-r from-pastel-blue-500 to-pastel-pink-400 text-white rounded-md hover:from-pastel-blue-600 hover:to-pastel-pink-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Assign
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <AssignChoreDialog
+        open={isAssignDialogOpen}
+        onClose={() => setIsAssignDialogOpen(false)}
+        onSave={handleSaveAssignment}
+        chore={selectedChoreForAssignment}
+      />
     </div>
   )
 }

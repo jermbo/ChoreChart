@@ -41,9 +41,9 @@ const deleteChore = async (id: string): Promise<void> => {
 
 const assignChore = async (
   choreId: string,
-  childId: string,
+  childIds: string[],
 ): Promise<ChoreAssignment> => {
-  return api.post(`/chores/${choreId}/assign`, { childId })
+  return api.post(`/chores/${choreId}/assign`, { childIds })
 }
 
 const unassignChore = async (
@@ -66,13 +66,13 @@ export const useChore = () => {
     },
   })
 
-  // const { data: assignmentsData, isLoading: isLoadingAssignments } = useQuery({
-  //   queryKey: ['choreAssignments'],
-  //   queryFn: async () => {
-  //     const result = await getAssignments()
-  //     return result.assignments
-  //   },
-  // })
+  const { data: assignmentsData, isLoading: isLoadingAssignments } = useQuery({
+    queryKey: ['choreAssignments'],
+    queryFn: async () => {
+      const result = await getAssignments()
+      return result.assignments
+    },
+  })
 
   const createMutation = useMutation({
     mutationFn: createChore,
@@ -87,7 +87,17 @@ export const useChore = () => {
     mutationFn: updateChore,
     onSuccess: (data) => {
       queryClient.setQueryData(['chores'], (old: Chore[] = []) => {
-        return old.map((chore) => (chore.id === data.id ? data : chore))
+        return old.map((chore) =>
+          chore.id === data.id
+            ? {
+                ...chore,
+                title: data.title,
+                description: data.description,
+                value: data.value,
+                dueDate: data.dueDate,
+              }
+            : chore,
+        )
       })
     },
   })
@@ -101,54 +111,62 @@ export const useChore = () => {
     },
   })
 
-  // const assignMutation = useMutation({
-  //   mutationFn: ({ choreId, childId }: { choreId: string; childId: string }) =>
-  //     assignChore(choreId, childId),
-  //   onSuccess: (data) => {
-  //     queryClient.setQueryData(
-  //       ['choreAssignments'],
-  //       (old: ChoreAssignment[] = []) => {
-  //         return [...old, data]
-  //       },
-  //     )
-  //   },
-  // })
+  const assignMutation = useMutation({
+    mutationFn: ({
+      choreId,
+      childIds,
+    }: {
+      choreId: string
+      childIds: string[]
+    }) => assignChore(choreId, childIds),
+    onSuccess: (data) => {
+      queryClient.setQueryData(
+        ['choreAssignments'],
+        (old: ChoreAssignment[] = []) => {
+          return [...old, data]
+        },
+      )
+    },
+  })
 
-  // const unassignMutation = useMutation({
-  //   mutationFn: ({ choreId, childId }: { choreId: string; childId: string }) =>
-  //     unassignChore(choreId, childId),
-  //   onSuccess: (_, { choreId, childId }) => {
-  //     queryClient.setQueryData(
-  //       ['choreAssignments'],
-  //       (old: ChoreAssignment[] = []) => {
-  //         return old.filter(
-  //           (assignment) =>
-  //             !(
-  //               assignment.chore_id === choreId &&
-  //               assignment.child_id === childId
-  //             ),
-  //         )
-  //       },
-  //     )
-  //   },
-  // })
+  const unassignMutation = useMutation({
+    mutationFn: ({ choreId, childId }: { choreId: string; childId: string }) =>
+      unassignChore(choreId, childId),
+    onSuccess: (_, { choreId, childId }) => {
+      queryClient.setQueryData(
+        ['choreAssignments'],
+        (old: ChoreAssignment[] = []) => {
+          return old.filter(
+            (assignment) =>
+              !(
+                assignment.chore_id === choreId &&
+                assignment.child_id === childId
+              ),
+          )
+        },
+      )
+    },
+  })
 
   return {
     chores: chores || [],
-    // assignments: assignmentsData || [],
+    assignments: assignmentsData || [],
     isLoading: isLoadingChores,
     createChore: createMutation.mutate,
     updateChore: updateMutation.mutate,
     deleteChore: deleteMutation.mutate,
-    // assignChore: assignMutation.mutate,
-    // unassignChore: unassignMutation.mutate,
+    assignChore: assignMutation.mutate,
+    unassignChore: unassignMutation.mutate,
     isCreating: createMutation.isPending,
     isUpdating: updateMutation.isPending,
     isDeleting: deleteMutation.isPending,
-    // isAssigning: assignMutation.isPending,
-    // isUnassigning: unassignMutation.isPending,
-    error: createMutation.error || updateMutation.error || deleteMutation.error,
-    // assignMutation.error ||
-    // unassignMutation.error,
+    isAssigning: assignMutation.isPending,
+    isUnassigning: unassignMutation.isPending,
+    error:
+      createMutation.error ||
+      updateMutation.error ||
+      deleteMutation.error ||
+      assignMutation.error ||
+      unassignMutation.error,
   }
 }

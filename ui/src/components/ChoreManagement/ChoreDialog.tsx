@@ -27,7 +27,7 @@ export const ChoreDialog: React.FC<ChoreDialogProps> = ({
       setTitle(chore.title)
       setDescription(chore.description)
       setValue(chore.value.toString())
-      setDueDate(new Date(chore.due_date).toISOString().split('T')[0])
+      setDueDate(new Date(chore.dueDate).toISOString().split('T')[0])
     } else {
       setTitle('')
       setDescription('')
@@ -43,7 +43,7 @@ export const ChoreDialog: React.FC<ChoreDialogProps> = ({
       title,
       description,
       value: parseFloat(value),
-      due_date: new Date(dueDate).toISOString(),
+      dueDate: new Date(dueDate).toISOString(),
     })
     onClose()
   }

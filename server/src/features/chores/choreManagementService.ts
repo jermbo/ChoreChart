@@ -23,6 +23,7 @@ export class ChoreManagementService {
     //convert into model - title,description,AssignedTo:[{name:user1},{name:user2}]
     const choresWithAssignmentsModel = choresWithAssignments.map((chore) => {
       return {
+        id: chore.chores.id,
         title: chore.chores.title,
         description: chore.chores.description,
         value: chore.chores.value,

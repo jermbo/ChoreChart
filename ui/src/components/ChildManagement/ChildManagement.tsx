@@ -20,7 +20,6 @@ export const ChildManagement: React.FC = () => {
     error,
   } = useChild(user?.parentId || undefined)
 
-  console.log(children)
   const handleCreateChild = (
     data: Omit<Child, 'id' | 'createdAt' | 'updatedAt' | 'parentId'>,
   ) => {

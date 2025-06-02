@@ -22,7 +22,6 @@ const choreService = new ChoreManagementService();
 export const getAllChores = async (context: Context) => {
   try {
     const chores = await choreService.getAllChores();
-    console.log(chores);
     return successResponse(context, chores, 200);
   } catch (error: unknown) {
     console.error("Chore retrieval error:", error);
@@ -69,6 +68,7 @@ export const updateChore = async (context: Context) => {
   try {
     const id = context.req.param("id");
     const requestBody = await context.req.json();
+
     const validationResult = validateRequestFormat<UpdateChoreData>(
       requestBody,
       updateChoreSchema
@@ -87,14 +87,7 @@ export const updateChore = async (context: Context) => {
       id,
       validationResult.data
     );
-    return successResponse(
-      context,
-      {
-        message: "Chore updated successfully",
-        chore: updatedChore,
-      },
-      200
-    );
+    return successResponse(context, updatedChore, 200);
   } catch (error: unknown) {
     console.error("Chore update error:", error);
     return errorResponse(context, "An error occurred during chore update", 500);
