@@ -159,7 +159,7 @@ export class ChoreManagementService {
 
   async updateChoreAssignment(
     choreId: string,
-    childId: string,
+
     data: UpdateChoreAssignmentData
   ) {
     const [updatedAssignment] = await db
@@ -170,7 +170,7 @@ export class ChoreManagementService {
       .where(
         and(
           eq(choreAssignments.choreId, choreId),
-          eq(choreAssignments.childId, childId)
+          eq(choreAssignments.childId, data.childId)
         )
       )
       .returning();

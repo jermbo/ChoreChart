@@ -12,6 +12,7 @@ import {
   getAllChores,
   assignChore,
   updateChore,
+  updateChoreStatus,
 } from "../features/chores/choreManagementController.js";
 import {
   getChildDashboard,
@@ -35,6 +36,7 @@ router.post("/createchore", createChore);
 router.put("/updatechore/:id", updateChore);
 router.delete("/deletechore/:id", deleteChore);
 router.post("/assignchore", assignChore);
+router.put("/updateChoreStatus/:choreId", updateChoreStatus);
 
 // Dashboard routes
 router.get("/childdashboard/:childId", getChildDashboard);

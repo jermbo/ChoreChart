@@ -6,10 +6,25 @@ interface UseChildChoresProps {
   childId?: string
 }
 
+type childDashboardResponse = Chore & {
+  assignmentId: string
+}
+
 const getChildDashboard = async (
   childId: string | undefined,
-): Promise<Chore[]> => {
-  return await api.get<Chore[]>(`/childdashboard/${childId}`)
+): Promise<childDashboardResponse[]> => {
+  return await api.get<childDashboardResponse[]>(`/childdashboard/${childId}`)
+}
+
+const updateChoreStatus = async (
+  childId: string | undefined,
+  choreId: string | undefined,
+  status: Chore['status'],
+): Promise<any> => {
+  return api.put(`/updateChoreStatus/${choreId}`, {
+    childId,
+    status,
+  })
 }
 
 export const useChildDashboard = ({ childId }: UseChildChoresProps = {}) => {
@@ -27,22 +42,24 @@ export const useChildDashboard = ({ childId }: UseChildChoresProps = {}) => {
     enabled: !!childId,
   })
 
-  const updateStatus = useMutation({
-    mutationFn: async ({
-      choreId,
-      status,
-    }: {
-      choreId: string
+  const updateStatusMutation = useMutation({
+    mutationFn: (variables: {
+      choreId: string | undefined
       status: Chore['status']
-    }) => {
-      const { data, error } = await api.put(`/updatechore/${choreId}`, {
-        status,
-      })
-      if (error) throw error
-      return data
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['childChores'] })
+    }) => updateChoreStatus(childId, variables.choreId, variables.status),
+    onSuccess: ({ data }) => {
+      // Update the cache
+      queryClient.setQueryData(
+        ['childChores', childId],
+        (oldData: childDashboardResponse[] | undefined) => {
+          if (!oldData) return []
+          return oldData.map((chore) =>
+            chore.id === data.choreId
+              ? { ...chore, status: data.status }
+              : chore,
+          )
+        },
+      )
     },
   })
 
@@ -50,6 +67,6 @@ export const useChildDashboard = ({ childId }: UseChildChoresProps = {}) => {
     chores,
     isLoading,
     error,
-    updateStatus,
+    updateStatus: updateStatusMutation.mutate,
   }
 }

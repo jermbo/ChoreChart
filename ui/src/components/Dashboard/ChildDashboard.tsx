@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { useUserContext } from '@/context/userContext'
 import { useChildDashboard } from '@/hooks/useChildDashboard'
@@ -16,6 +16,13 @@ const ChildDashboard: React.FC = () => {
     childId: user?.childId || undefined,
   })
 
+  // Filter chores based on selected status
+  const filteredChores = useMemo(() => {
+    if (!chores) return []
+    if (selectedStatus === 'all') return chores
+    return chores.filter((chore) => chore.status === selectedStatus)
+  }, [chores, selectedStatus])
+
   const handleHome = () => {
     router.navigate({ to: '/' })
   }
@@ -25,7 +32,7 @@ const ChildDashboard: React.FC = () => {
     newStatus: Chore['status'],
   ) => {
     try {
-      await updateStatus.mutateAsync({ choreId, status: newStatus })
+      await updateStatus({ choreId, status: newStatus })
     } catch (error) {
       console.error('Error updating chore status:', error)
     }
@@ -35,7 +42,7 @@ const ChildDashboard: React.FC = () => {
     switch (status) {
       case 'pending':
         return 'bg-yellow-100 text-yellow-800'
-      case 'in_progress':
+      case 'in progress':
         return 'bg-blue-100 text-blue-800'
       case 'completed':
         return 'bg-green-100 text-green-800'
@@ -76,7 +83,7 @@ const ChildDashboard: React.FC = () => {
 
       <div className="mb-6">
         <div className="flex space-x-2">
-          {['all', 'pending', 'in_progress', 'completed', 'verified'].map(
+          {['all', 'pending', 'in progress', 'completed', 'verified'].map(
             (status) => (
               <button
                 key={status}
@@ -89,8 +96,7 @@ const ChildDashboard: React.FC = () => {
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                {status.charAt(0).toUpperCase() +
-                  status.slice(1).replace('_', ' ')}
+                {status.charAt(0).toUpperCase() + status.slice(1)}
               </button>
             ),
           )}
@@ -98,7 +104,7 @@ const ChildDashboard: React.FC = () => {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {chores?.map((chore) => (
+        {filteredChores.map((chore) => (
           <div
             key={chore.id}
             className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
@@ -110,7 +116,7 @@ const ChildDashboard: React.FC = () => {
               <span
                 className={`px-2 py-1 rounded-full text-sm ${getStatusColor(chore.status)}`}
               >
-                {chore.status?.replace('_', ' ')}
+                {chore.status}
               </span>
             </div>
 
@@ -129,13 +135,13 @@ const ChildDashboard: React.FC = () => {
               <div className="flex space-x-2">
                 {chore.status === 'pending' && (
                   <button
-                    onClick={() => handleStatusChange(chore.id, 'in_progress')}
+                    onClick={() => handleStatusChange(chore.id, 'in progress')}
                     className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                   >
                     Start
                   </button>
                 )}
-                {chore.status === 'in_progress' && (
+                {chore.status === 'in progress' && (
                   <button
                     onClick={() => handleStatusChange(chore.id, 'completed')}
                     className="flex-1 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
@@ -149,7 +155,7 @@ const ChildDashboard: React.FC = () => {
         ))}
       </div>
 
-      {chores?.length === 0 && (
+      {filteredChores.length === 0 && (
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg">
             No chores found for this status.

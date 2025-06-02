@@ -9,6 +9,8 @@ import {
   type UpdateChoreData,
   type CreateChoreAssignmentData,
   type UpdateChoreAssignmentData,
+  type UpdateChoreStatusRequestData,
+  updateChoreStatusSchema,
 } from "./choreManagementSchema.js";
 import {
   errorResponse,
@@ -146,10 +148,9 @@ export const assignChore = async (context: Context) => {
   }
 };
 
-export const updateChoreAssignment = async (context: Context) => {
+export const updateChoreStatus = async (context: Context) => {
   try {
     const choreId = context.req.param("choreId");
-    const childId = context.req.param("childId");
     const requestBody = await context.req.json();
     const validationResult = validateRequestFormat<UpdateChoreAssignmentData>(
       requestBody,
@@ -160,6 +161,7 @@ export const updateChoreAssignment = async (context: Context) => {
       return validationErrorResponse(context, validationResult.error.errors);
     }
 
+    const { childId } = validationResult.data;
     const existingAssignment = await choreService.getChoreAssignment(
       choreId,
       childId
@@ -170,17 +172,9 @@ export const updateChoreAssignment = async (context: Context) => {
 
     const updatedAssignment = await choreService.updateChoreAssignment(
       choreId,
-      childId,
       validationResult.data
     );
-    return successResponse(
-      context,
-      {
-        message: "Chore assignment updated successfully",
-        assignment: updatedAssignment,
-      },
-      200
-    );
+    return successResponse(context, updatedAssignment, 200);
   } catch (error: unknown) {
     console.error("Chore assignment update error:", error);
     return errorResponse(

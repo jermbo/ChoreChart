@@ -1,3 +1,5 @@
+export type status = 'pending' | 'in progress' | 'completed' | 'verified'
+
 export interface User {
   id: string
   email: string
@@ -28,9 +30,11 @@ export interface Chore {
   description: string
   value: number
   dueDate: string
-  status: 'pending' | 'in_progress' | 'completed' | 'verified'
+  status: status
   createdAt: string
   updatedAt: string
+  verifiedAt: string
+  comment: string
 }
 
 export interface ChoreAssignment {

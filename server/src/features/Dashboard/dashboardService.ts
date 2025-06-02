@@ -12,7 +12,15 @@ export class DashboardService {
       .where(eq(choreAssignments.childId, childId))
       .orderBy(desc(chores.dueDate));
 
-    const choresData = childChores.map((c) => c.chores);
+    const choresData = childChores.map((c) => {
+      return {
+        ...c.chores,
+        status: c.chore_assignments.status,
+        assignmentId: c.chore_assignments.id,
+        varifiedAt: c.chore_assignments.verifiedAt,
+        comments: c.chore_assignments.comment,
+      };
+    });
     return choresData;
   }
 
