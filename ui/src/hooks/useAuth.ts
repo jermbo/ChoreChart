@@ -17,25 +17,19 @@ interface RegisterData {
 }
 
 interface AuthResponse {
-  data: {
-    message: string
-    user: User
-  }
+  data: User
   success: boolean
 }
 
 const loginUser = async (
   credentials: LoginCredentials,
-): Promise<AuthResponse['data']> => {
+): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>('/login', credentials)
-  return response.data
+  return response
 }
 
 const registerParent = async (data: RegisterData): Promise<AuthResponse> => {
-  return api.post<AuthResponse>('/register', {
-    ...data,
-    role: 'PARENT',
-  })
+  return api.post<AuthResponse>('/register', { ...data, role: 'parent' })
 }
 
 export const useAuth = () => {
@@ -44,15 +38,19 @@ export const useAuth = () => {
 
   const loginMutation = useMutation({
     mutationFn: loginUser,
-    onSuccess: (data) => {
-      if (!data || !data.user) {
+    onSuccess: ({ data }) => {
+      if (!data) {
         console.error('User data is missing from the response')
         return
       }
-      saveUserDetails(data.user)
-      if (data.user.role === 'PARENT') {
+      saveUserDetails(data)
+
+      if (data.role === 'parent') {
         router.navigate({
-          to: '/parentdashboard',
+          to: '/parentDashboard',
+          search: {
+            message: 'Login successful',
+          },
         })
       } else {
         router.navigate({

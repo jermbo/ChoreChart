@@ -76,16 +76,8 @@ export const login = async (context: Context) => {
     }
 
     const user = await loginService.loginUser(validationResult.data);
-
     // 4. Return success response
-    return successResponse(
-      context,
-      {
-        message: "Login successful",
-        user,
-      },
-      200
-    );
+    return successResponse(context, user, 200);
   } catch (error: unknown) {
     console.error("Login error:", error);
     if (error instanceof Error && error.message === "Invalid credentials") {

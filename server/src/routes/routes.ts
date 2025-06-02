@@ -13,6 +13,10 @@ import {
   assignChore,
   updateChore,
 } from "../features/chores/choreManagementController.js";
+import {
+  getChildDashboard,
+  getParentDashboard,
+} from "../features/Dashboard/dashboardController.js";
 
 // Create the main router
 const router = new Hono();
@@ -31,5 +35,9 @@ router.post("/createchore", createChore);
 router.put("/updatechore/:id", updateChore);
 router.delete("/deletechore/:id", deleteChore);
 router.post("/assignchore", assignChore);
+
+// Dashboard routes
+router.get("/childdashboard", getChildDashboard);
+router.get("/parentdashboard", getParentDashboard);
 
 export default router;

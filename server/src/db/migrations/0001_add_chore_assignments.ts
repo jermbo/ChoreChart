@@ -18,6 +18,9 @@ export async function up(db: any) {
       notNull: true,
       defaultValue: sql`now()`,
     })
+    .addColumn("completed_at", "timestamp")
+    .addColumn("verified_at", "timestamp")
+    .addColumn("comment", "text")
     .execute();
 }
 

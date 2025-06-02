@@ -3,7 +3,7 @@ export interface User {
   email: string
   firstName: string
   lastName: string
-  role: 'PARENT' | 'CHILD'
+  role: 'parent' | 'child'
   parentId: string | null
   childId: string | null
   createdAt: string
