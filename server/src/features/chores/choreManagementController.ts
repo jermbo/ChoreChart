@@ -134,15 +134,8 @@ export const assignChore = async (context: Context) => {
       return validationErrorResponse(context, validationResult.error.errors);
     }
 
-    const assignment = await choreService.assignChore(validationResult.data);
-    return successResponse(
-      context,
-      {
-        message: "Chore assigned successfully",
-        assignment,
-      },
-      201
-    );
+    const assignments = await choreService.assignChore(validationResult.data);
+    return successResponse(context, assignments, 201);
   } catch (error: unknown) {
     console.error("Chore assignment error:", error);
     return errorResponse(

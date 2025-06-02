@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
-import type { Chore } from '../../types/index'
+import React, { useEffect, useState } from 'react'
+import type { Chore, ChoreAssignment } from '../../types/index'
 import { useChild } from '../../hooks/useChild'
 import { useUserContext } from '../../context/userContext'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface AssignChoreDialogProps {
   open: boolean
@@ -18,8 +19,23 @@ export const AssignChoreDialog: React.FC<AssignChoreDialogProps> = ({
 }) => {
   const [selectedChildIds, setSelectedChildIds] = useState<string[]>([])
   const { user } = useUserContext()
-
+  const queryClient = useQueryClient()
   const { children } = useChild(user?.parentId || undefined)
+
+  useEffect(() => {
+    if (chore) {
+      //get assignment from tanstack query cache
+      const assignments: ChoreAssignment[] | undefined =
+        queryClient.getQueryData(['choreAssignments', chore.id])
+      if (assignments) {
+        setSelectedChildIds(
+          assignments.map(
+            (assignment: ChoreAssignment) => assignment.childId,
+          ) || [],
+        )
+      }
+    }
+  }, [chore, queryClient])
 
   const handleSave = async () => {
     if (!chore || selectedChildIds.length === 0) return

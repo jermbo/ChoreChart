@@ -29,24 +29,24 @@ export interface Chore {
   value: number
   dueDate: string
   status: 'pending' | 'in_progress' | 'completed' | 'verified'
-  created_at: string
-  updated_at: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface ChoreAssignment {
   id: string
-  chore_id: string
-  child_id: string
-  created_at: string
-  updated_at: string
+  choreId: string
+  childId: string
+  createdAt: string
+  updatedAt: string
   chore?: Chore
   child?: {
     id: string
-    user_id: string
-    parent_id: string
-    base_allowance: number
-    avatar_url: string
-    created_at: string
-    updated_at: string
+    userId: string
+    parentId: string
+    baseAllowance: number
+    avatarUrl: string
+    createdAt: string
+    updatedAt: string
   }
 }

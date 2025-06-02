@@ -21,11 +21,11 @@ const getAllChores = async (): Promise<Chore[]> => {
   return response.success ? response.data : []
 }
 
-const getAssignments = async (): Promise<{
-  assignments: ChoreAssignment[]
-}> => {
-  return api.get('/chores/assignments')
-}
+// const getAssignments = async (): Promise<{
+//   assignments: ChoreAssignment[]
+// }> => {
+//   return api.get('/chores/assignments')
+// }
 
 const createChore = async (data: CreateChoreData): Promise<Chore> => {
   return api.post('/createchore', data)
@@ -43,7 +43,7 @@ const assignChore = async (
   choreId: string,
   childIds: string[],
 ): Promise<ChoreAssignment> => {
-  return api.post(`/chores/${choreId}/assign`, { childIds })
+  return api.post(`/assignchore`, { choreId, childIds })
 }
 
 const unassignChore = async (
@@ -66,13 +66,13 @@ export const useChore = () => {
     },
   })
 
-  const { data: assignmentsData, isLoading: isLoadingAssignments } = useQuery({
-    queryKey: ['choreAssignments'],
-    queryFn: async () => {
-      const result = await getAssignments()
-      return result.assignments
-    },
-  })
+  // const { data: assignmentsData, isLoading: isLoadingAssignments } = useQuery({
+  //   queryKey: ['choreAssignments'],
+  //   queryFn: async () => {
+  //     const result = await getAssignments()
+  //     return result.assignments
+  //   },
+  // })
 
   const createMutation = useMutation({
     mutationFn: createChore,
@@ -119,11 +119,11 @@ export const useChore = () => {
       choreId: string
       childIds: string[]
     }) => assignChore(choreId, childIds),
-    onSuccess: (data) => {
+    onSuccess: (data, { choreId }) => {
       queryClient.setQueryData(
-        ['choreAssignments'],
+        ['choreAssignments', choreId],
         (old: ChoreAssignment[] = []) => {
-          return [...old, data]
+          return [...old, ...data.data]
         },
       )
     },
@@ -150,7 +150,7 @@ export const useChore = () => {
 
   return {
     chores: chores || [],
-    assignments: assignmentsData || [],
+    // assignments: assignmentsData || [],
     isLoading: isLoadingChores,
     createChore: createMutation.mutate,
     updateChore: updateMutation.mutate,
@@ -160,13 +160,10 @@ export const useChore = () => {
     isCreating: createMutation.isPending,
     isUpdating: updateMutation.isPending,
     isDeleting: deleteMutation.isPending,
-    isAssigning: assignMutation.isPending,
-    isUnassigning: unassignMutation.isPending,
-    error:
-      createMutation.error ||
-      updateMutation.error ||
-      deleteMutation.error ||
-      assignMutation.error ||
-      unassignMutation.error,
+    // isAssigning: assignMutation.isPending,
+    // isUnassigning: unassignMutation.isPending,
+    error: createMutation.error || updateMutation.error || deleteMutation.error,
+    // assignMutation.error ||
+    // unassignMutation.error,
   }
 }

@@ -14,28 +14,7 @@ type Chore = InferSelectModel<typeof chores>;
 
 export class ChoreManagementService {
   async getAllChores() {
-    const choresWithAssignments = await db
-      .select()
-      .from(chores)
-      .leftJoin(choreAssignments, eq(chores.id, choreAssignments.choreId))
-      .leftJoin(users, eq(choreAssignments.childId, users.id))
-      .orderBy(desc(chores.dueDate));
-    //convert into model - title,description,AssignedTo:[{name:user1},{name:user2}]
-    const choresWithAssignmentsModel = choresWithAssignments.map((chore) => {
-      return {
-        id: chore.chores.id,
-        title: chore.chores.title,
-        description: chore.chores.description,
-        value: chore.chores.value,
-        dueDate: chore.chores.dueDate,
-        assignedTo: chore.users?.map((user) => ({
-          name: `${user.firstName} ${user.lastName}`,
-          email: user.email,
-          id: user.id,
-        })),
-      };
-    });
-    return choresWithAssignmentsModel;
+    return await db.select().from(chores).orderBy(desc(chores.dueDate));
   }
 
   async createChore(data: CreateChoreData) {
@@ -163,16 +142,19 @@ export class ChoreManagementService {
   }
 
   async assignChore(data: CreateChoreAssignmentData) {
-    const [assignment] = await db
-      .insert(choreAssignments)
-      .values({
-        choreId: data.choreId,
-        childId: data.childId,
-        status: data.status,
+    const assignments = await Promise.all(
+      data.childIds.map(async (childId) => {
+        const [assignment] = await db
+          .insert(choreAssignments)
+          .values({
+            choreId: data.choreId,
+            childId,
+          })
+          .returning();
+        return assignment;
       })
-      .returning();
-
-    return assignment;
+    );
+    return assignments;
   }
 
   async updateChoreAssignment(

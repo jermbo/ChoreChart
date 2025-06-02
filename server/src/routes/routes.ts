@@ -10,6 +10,7 @@ import {
   createChore,
   deleteChore,
   getAllChores,
+  assignChore,
   updateChore,
 } from "../features/chores/choreManagementController.js";
 
@@ -26,9 +27,9 @@ router.put("/updatechild", updateChild);
 router.delete("/deletechild/:id", deleteChild);
 
 router.get("/getallchores", getAllChores);
-
 router.post("/createchore", createChore);
 router.put("/updatechore/:id", updateChore);
 router.delete("/deletechore/:id", deleteChore);
+router.post("/assignchore", assignChore);
 
 export default router;
