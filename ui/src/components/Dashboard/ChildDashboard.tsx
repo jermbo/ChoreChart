@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { useUserContext } from '@/context/userContext'
-import { useChildDashboard } from '@/hooks/useChildDashboard'
+import { ChoreCard } from './ChoreCard'
 import type { Chore } from '@/types'
-import { formatDate } from '@/utility/utils'
+import { useDashboard } from '@/hooks/useDashboard'
 
 const ChildDashboard: React.FC = () => {
   const router = useRouter()
@@ -12,8 +12,13 @@ const ChildDashboard: React.FC = () => {
     'all',
   )
 
-  const { chores, isLoading, error, updateStatus } = useChildDashboard({
-    childId: user?.childId || undefined,
+  const {
+    childChores: chores,
+    isLoading,
+    error,
+    updateStatus,
+  } = useDashboard({
+    user: user || undefined,
   })
 
   // Filter chores based on selected status
@@ -24,32 +29,18 @@ const ChildDashboard: React.FC = () => {
   }, [chores, selectedStatus])
 
   const handleHome = () => {
-    router.navigate({ to: '/' })
+    router.navigate({ to: '/', search: { message: undefined } })
   }
 
   const handleStatusChange = async (
     choreId: string,
+    assignmentId: string,
     newStatus: Chore['status'],
   ) => {
     try {
-      await updateStatus({ choreId, status: newStatus })
+      await updateStatus({ choreId, assignmentId, status: newStatus })
     } catch (error) {
       console.error('Error updating chore status:', error)
-    }
-  }
-
-  const getStatusColor = (status: Chore['status']) => {
-    switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'in progress':
-        return 'bg-blue-100 text-blue-800'
-      case 'completed':
-        return 'bg-green-100 text-green-800'
-      case 'verified':
-        return 'bg-purple-100 text-purple-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
     }
   }
 
@@ -105,53 +96,12 @@ const ChildDashboard: React.FC = () => {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredChores.map((chore) => (
-          <div
+          <ChoreCard
             key={chore.id}
-            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
-          >
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">
-                {chore.title}
-              </h3>
-              <span
-                className={`px-2 py-1 rounded-full text-sm ${getStatusColor(chore.status)}`}
-              >
-                {chore.status}
-              </span>
-            </div>
-
-            <p className="text-gray-600 mb-4">{chore.description}</p>
-
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-lg font-semibold text-green-600">
-                ${chore.value}
-              </span>
-              <span className="text-sm text-gray-500">
-                Due: {formatDate(chore.dueDate)}
-              </span>
-            </div>
-
-            {chore.status !== 'verified' && (
-              <div className="flex space-x-2">
-                {chore.status === 'pending' && (
-                  <button
-                    onClick={() => handleStatusChange(chore.id, 'in progress')}
-                    className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                  >
-                    Start
-                  </button>
-                )}
-                {chore.status === 'in progress' && (
-                  <button
-                    onClick={() => handleStatusChange(chore.id, 'completed')}
-                    className="flex-1 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-                  >
-                    Complete
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
+            chore={chore}
+            onStatusChange={handleStatusChange}
+            showActions={chore.status !== 'verified'}
+          />
         ))}
       </div>
 

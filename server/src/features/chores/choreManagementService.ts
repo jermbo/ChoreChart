@@ -170,7 +170,7 @@ export class ChoreManagementService {
       .where(
         and(
           eq(choreAssignments.choreId, choreId),
-          eq(choreAssignments.childId, data.childId)
+          eq(choreAssignments.id, data.assignmentId)
         )
       )
       .returning();
@@ -192,14 +192,14 @@ export class ChoreManagementService {
     return deletedAssignment;
   }
 
-  async getChoreAssignment(choreId: string, childId: string) {
+  async getChoreAssignment(choreId: string, assignmentId: string) {
     const [assignment] = await db
       .select()
       .from(choreAssignments)
       .where(
         and(
           eq(choreAssignments.choreId, choreId),
-          eq(choreAssignments.childId, childId)
+          eq(choreAssignments.id, assignmentId)
         )
       );
 

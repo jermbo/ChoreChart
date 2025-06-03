@@ -32,7 +32,6 @@ export async function getParentDashboard(context: Context) {
         403
       );
     }
-
     const dashboard = await DashboardService.getParentDashboard(parentId);
 
     return context.json(dashboard);

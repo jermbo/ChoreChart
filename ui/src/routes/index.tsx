@@ -60,12 +60,18 @@ const childDashboardRoute = createRoute({
 const childRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/childManagement',
+  validateSearch: (search: Record<string, unknown>) => ({
+    message: (search.message as string) || undefined,
+  }),
   component: ChildManagement,
 })
 
 const choreRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/choreManagement',
+  validateSearch: (search: Record<string, unknown>) => ({
+    message: (search.message as string) || undefined,
+  }),
   component: ChoreManagement,
 })
 

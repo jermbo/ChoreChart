@@ -152,6 +152,7 @@ export const updateChoreStatus = async (context: Context) => {
   try {
     const choreId = context.req.param("choreId");
     const requestBody = await context.req.json();
+
     const validationResult = validateRequestFormat<UpdateChoreAssignmentData>(
       requestBody,
       updateChoreAssignmentSchema
@@ -161,11 +162,12 @@ export const updateChoreStatus = async (context: Context) => {
       return validationErrorResponse(context, validationResult.error.errors);
     }
 
-    const { childId } = validationResult.data;
+    const { assignmentId } = validationResult.data;
     const existingAssignment = await choreService.getChoreAssignment(
       choreId,
-      childId
+      assignmentId
     );
+
     if (!existingAssignment) {
       return errorResponse(context, "Chore assignment not found", 404);
     }

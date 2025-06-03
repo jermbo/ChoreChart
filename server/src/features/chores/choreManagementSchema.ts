@@ -41,7 +41,7 @@ export const createChoreAssignmentSchema = z.object({
 });
 
 export const updateChoreAssignmentSchema = z.object({
-  childId: z.string().uuid(),
+  assignmentId: z.string().uuid(),
   status: z.enum(["pending", "in progress", "completed", "verified"]),
 });
 
