@@ -79,19 +79,35 @@ export const useDashboard = ({ user }: UseDashboardProps = {}) => {
         variables.assignmentId,
         variables.status,
       ),
-    onSuccess: ({ data }, { assignmentId }) => {
-      // Update the cache
-      queryClient.setQueryData(
-        ['childChores', assignmentId],
-        (oldData: childDashboardResponse[] | undefined) => {
-          if (!oldData) return []
-          return oldData.map((chore) =>
-            chore.id === data.choreId
-              ? { ...chore, status: data.status }
-              : chore,
-          )
-        },
-      )
+    onSuccess: ({ data }) => {
+      if (user?.role === 'parent') {
+        // Update the cache
+        queryClient.setQueryData(
+          ['parentChores', user?.parentId],
+          (oldData: ParentDashboardResponse[] | undefined) => {
+            if (!oldData) return []
+            return oldData.map((chore) =>
+              chore.id === data.choreId
+                ? { ...chore, status: data.status }
+                : chore,
+            )
+          },
+        )
+      }
+      if (user?.role === 'child') {
+        // Update the cache
+        queryClient.setQueryData(
+          ['childChores', user?.childId],
+          (oldData: childDashboardResponse[] | undefined) => {
+            if (!oldData) return []
+            return oldData.map((chore) =>
+              chore.id === data.choreId
+                ? { ...chore, status: data.status }
+                : chore,
+            )
+          },
+        )
+      }
     },
   })
 

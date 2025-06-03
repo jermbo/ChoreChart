@@ -100,7 +100,9 @@ const ChildDashboard: React.FC = () => {
             key={chore.id}
             chore={chore}
             onStatusChange={handleStatusChange}
-            showActions={chore.status !== 'verified'}
+            showActions={
+              chore.status !== 'verified' && chore.status != 'completed'
+            }
           />
         ))}
       </div>
