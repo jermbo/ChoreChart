@@ -1,5 +1,5 @@
-import { eq, and } from "drizzle-orm";
-import { chores, choreAssignments } from "../../db/schema.js";
+import { eq, and, desc } from "drizzle-orm";
+import { chores, choreAssignments, users } from "../../db/schema.js";
 import { db } from "../../db/index.js";
 import type {
   CreateChoreData,
@@ -13,6 +13,10 @@ type ChoreAssignment = InferSelectModel<typeof choreAssignments>;
 type Chore = InferSelectModel<typeof chores>;
 
 export class ChoreManagementService {
+  async getAllChores() {
+    return await db.select().from(chores).orderBy(desc(chores.dueDate));
+  }
+
   async createChore(data: CreateChoreData) {
     return await db.transaction(async (tx) => {
       // 1. Create the chore
@@ -138,21 +142,24 @@ export class ChoreManagementService {
   }
 
   async assignChore(data: CreateChoreAssignmentData) {
-    const [assignment] = await db
-      .insert(choreAssignments)
-      .values({
-        choreId: data.choreId,
-        childId: data.childId,
-        status: data.status,
+    const assignments = await Promise.all(
+      data.childIds.map(async (childId) => {
+        const [assignment] = await db
+          .insert(choreAssignments)
+          .values({
+            choreId: data.choreId,
+            childId,
+          })
+          .returning();
+        return assignment;
       })
-      .returning();
-
-    return assignment;
+    );
+    return assignments;
   }
 
   async updateChoreAssignment(
     choreId: string,
-    childId: string,
+
     data: UpdateChoreAssignmentData
   ) {
     const [updatedAssignment] = await db
@@ -163,7 +170,7 @@ export class ChoreManagementService {
       .where(
         and(
           eq(choreAssignments.choreId, choreId),
-          eq(choreAssignments.childId, childId)
+          eq(choreAssignments.id, data.assignmentId)
         )
       )
       .returning();
@@ -185,14 +192,14 @@ export class ChoreManagementService {
     return deletedAssignment;
   }
 
-  async getChoreAssignment(choreId: string, childId: string) {
+  async getChoreAssignment(choreId: string, assignmentId: string) {
     const [assignment] = await db
       .select()
       .from(choreAssignments)
       .where(
         and(
           eq(choreAssignments.choreId, choreId),
-          eq(choreAssignments.childId, childId)
+          eq(choreAssignments.id, assignmentId)
         )
       );
 

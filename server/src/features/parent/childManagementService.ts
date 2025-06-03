@@ -7,7 +7,7 @@ import {
   choreAssignments,
 } from "../../db/schema.js";
 import { db } from "../../db/index.js";
-import type { createChildData } from "./childSchema.js";
+import type { createChildData, updateChildData } from "./childSchema.js";
 import bcrypt from "bcrypt";
 import type { InferSelectModel } from "drizzle-orm";
 
@@ -32,7 +32,6 @@ export class childManagementService {
 
   async createChild(data: createChildData) {
     const passwordHash = await bcrypt.hash(data.password, 10);
-
     // Start a transaction
     return await db.transaction(async (tx) => {
       // 1. Create the user
@@ -56,7 +55,12 @@ export class childManagementService {
         })
         .returning();
 
-      return newChild;
+      return {
+        ...newChild,
+        email: newUser.email,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+      };
     });
   }
 
@@ -111,5 +115,38 @@ export class childManagementService {
     );
 
     return childrenWithDetails;
+  }
+
+  async updateChild(data: updateChildData) {
+    //fetch child for the data id
+    const childDetailsFromDb = await db
+      .select()
+      .from(children)
+      .where(eq(children.id, data.id));
+
+    //update child variable with data details
+    const updatedData = {
+      ...childDetailsFromDb,
+      baseAllowance: data.baseAllowance.toFixed(2),
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      updatedAt: new Date(),
+    };
+
+    const child = await db
+      .update(children)
+      .set(updatedData)
+      .where(eq(children.id, data.id))
+      .returning();
+    return child;
+  }
+
+  async deleteChild(id: string) {
+    const child = await db
+      .delete(children)
+      .where(eq(children.id, id))
+      .returning();
+    return child;
   }
 }

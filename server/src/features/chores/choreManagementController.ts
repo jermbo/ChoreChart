@@ -9,6 +9,8 @@ import {
   type UpdateChoreData,
   type CreateChoreAssignmentData,
   type UpdateChoreAssignmentData,
+  type UpdateChoreStatusRequestData,
+  updateChoreStatusSchema,
 } from "./choreManagementSchema.js";
 import {
   errorResponse,
@@ -18,6 +20,20 @@ import {
 import { ChoreManagementService } from "./choreManagementService.js";
 
 const choreService = new ChoreManagementService();
+
+export const getAllChores = async (context: Context) => {
+  try {
+    const chores = await choreService.getAllChores();
+    return successResponse(context, chores, 200);
+  } catch (error: unknown) {
+    console.error("Chore retrieval error:", error);
+    return errorResponse(
+      context,
+      "An error occurred during chore retrieval",
+      500
+    );
+  }
+};
 
 export const createChore = async (context: Context) => {
   try {
@@ -54,6 +70,7 @@ export const updateChore = async (context: Context) => {
   try {
     const id = context.req.param("id");
     const requestBody = await context.req.json();
+
     const validationResult = validateRequestFormat<UpdateChoreData>(
       requestBody,
       updateChoreSchema
@@ -72,14 +89,7 @@ export const updateChore = async (context: Context) => {
       id,
       validationResult.data
     );
-    return successResponse(
-      context,
-      {
-        message: "Chore updated successfully",
-        chore: updatedChore,
-      },
-      200
-    );
+    return successResponse(context, updatedChore, 200);
   } catch (error: unknown) {
     console.error("Chore update error:", error);
     return errorResponse(context, "An error occurred during chore update", 500);
@@ -126,15 +136,8 @@ export const assignChore = async (context: Context) => {
       return validationErrorResponse(context, validationResult.error.errors);
     }
 
-    const assignment = await choreService.assignChore(validationResult.data);
-    return successResponse(
-      context,
-      {
-        message: "Chore assigned successfully",
-        assignment,
-      },
-      201
-    );
+    const assignments = await choreService.assignChore(validationResult.data);
+    return successResponse(context, assignments, 201);
   } catch (error: unknown) {
     console.error("Chore assignment error:", error);
     return errorResponse(
@@ -145,11 +148,11 @@ export const assignChore = async (context: Context) => {
   }
 };
 
-export const updateChoreAssignment = async (context: Context) => {
+export const updateChoreStatus = async (context: Context) => {
   try {
     const choreId = context.req.param("choreId");
-    const childId = context.req.param("childId");
     const requestBody = await context.req.json();
+
     const validationResult = validateRequestFormat<UpdateChoreAssignmentData>(
       requestBody,
       updateChoreAssignmentSchema
@@ -159,27 +162,21 @@ export const updateChoreAssignment = async (context: Context) => {
       return validationErrorResponse(context, validationResult.error.errors);
     }
 
+    const { assignmentId } = validationResult.data;
     const existingAssignment = await choreService.getChoreAssignment(
       choreId,
-      childId
+      assignmentId
     );
+
     if (!existingAssignment) {
       return errorResponse(context, "Chore assignment not found", 404);
     }
 
     const updatedAssignment = await choreService.updateChoreAssignment(
       choreId,
-      childId,
       validationResult.data
     );
-    return successResponse(
-      context,
-      {
-        message: "Chore assignment updated successfully",
-        assignment: updatedAssignment,
-      },
-      200
-    );
+    return successResponse(context, updatedAssignment, 200);
   } catch (error: unknown) {
     console.error("Chore assignment update error:", error);
     return errorResponse(

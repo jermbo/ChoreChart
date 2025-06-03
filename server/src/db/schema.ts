@@ -6,7 +6,6 @@ import {
   decimal,
   text,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -14,6 +13,7 @@ export const users = pgTable("users", {
   passwordHash: varchar("password_hash", { length: 255 }).notNull(),
   firstName: varchar("first_name", { length: 100 }).notNull(),
   lastName: varchar("last_name", { length: 100 }).notNull(),
+  role: varchar("role", { length: 50 }).notNull().default("parent"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -64,6 +64,9 @@ export const choreAssignments = pgTable("chore_assignments", {
   status: varchar("status", { length: 50 }).notNull().default("pending"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  completedAt: timestamp("completed_at"),
+  verifiedAt: timestamp("verified_at"),
+  comment: text("comment"),
 });
 
 export const allowanceTransactions = pgTable("allowance_transactions", {

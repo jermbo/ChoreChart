@@ -37,13 +37,22 @@ export const updateChoreSchema = z.object({
 
 export const createChoreAssignmentSchema = z.object({
   choreId: z.string().uuid(),
-  childId: z.string().uuid(),
-  status: z.enum(["pending", "completed", "cancelled"]).default("pending"),
+  childIds: z.array(z.string().uuid()),
 });
 
 export const updateChoreAssignmentSchema = z.object({
+  assignmentId: z.string().uuid(),
+  status: z.enum(["pending", "in progress", "completed", "verified"]),
+});
+
+export const updateChoreStatusSchema = z.object({
+  childId: z.string(),
   status: z.enum(["pending", "completed", "cancelled"]),
 });
+
+export type UpdateChoreStatusRequestData = z.infer<
+  typeof updateChoreStatusSchema
+>;
 
 export type CreateChoreData = z.infer<typeof createChoreSchema>;
 export type UpdateChoreData = z.infer<typeof updateChoreSchema>;

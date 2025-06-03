@@ -11,3 +11,13 @@ export const createChildSchema = z.object({
 });
 
 export type createChildData = z.infer<typeof createChildSchema>;
+
+export const updateChildSchema = z.object({
+  id: z.string().uuid(),
+  email: fieldValidation.email,
+  firstName: fieldValidation.firstName,
+  lastName: fieldValidation.lastName,
+  baseAllowance: z.number().min(0).multipleOf(0.01),
+});
+
+export type updateChildData = z.infer<typeof updateChildSchema>;
