@@ -1,5 +1,5 @@
 import { eq, sql } from "drizzle-orm";
-import { children, users } from "../../db/schema.js";
+import { children, users, choreAssignments } from "../../db/schema.js";
 import { db } from "../../db/index.js";
 import type { createChildData, updateChildData } from "./childSchema.js";
 import bcrypt from "bcrypt";
@@ -31,6 +31,7 @@ export class childManagementService {
           passwordHash,
           firstName: data.firstName,
           lastName: data.lastName,
+          role: "child",
         })
         .returning();
 
@@ -121,10 +122,30 @@ export class childManagementService {
   }
 
   async deleteChild(id: string) {
-    const child = await db
-      .delete(children)
-      .where(eq(children.id, id))
-      .returning();
-    return child;
+    return await db.transaction(async (tx) => {
+      // First get the child to get the userId
+      const [childDetails] = await tx
+        .select()
+        .from(children)
+        .where(eq(children.id, id));
+
+      if (!childDetails) {
+        throw new Error("Child not found");
+      }
+
+      // Delete chore assignments for this child
+      await tx.delete(choreAssignments).where(eq(choreAssignments.childId, id));
+
+      // Delete the child record
+      const [deletedChild] = await tx
+        .delete(children)
+        .where(eq(children.id, id))
+        .returning();
+
+      // Delete the associated user record
+      await tx.delete(users).where(eq(users.id, childDetails.userId));
+
+      return deletedChild;
+    });
   }
 }
