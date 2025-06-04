@@ -27,12 +27,19 @@ const getAllChores = async (): Promise<Chore[]> => {
 //   return api.get('/chores/assignments')
 // }
 
-const createChore = async (data: CreateChoreData): Promise<Chore> => {
-  return api.post('/createchore', data)
+const createChore = async (
+  data: CreateChoreData,
+): Promise<{ success: boolean; data: Chore }> => {
+  return api.post<{ success: boolean; data: Chore }>('/createchore', data)
 }
 
-const updateChore = async (data: UpdateChoreData): Promise<Chore> => {
-  return api.put(`/updatechore/${data.id}`, data)
+const updateChore = async (
+  data: UpdateChoreData,
+): Promise<{ success: boolean; data: Chore }> => {
+  return api.put<{ success: boolean; data: Chore }>(
+    `/updatechore/${data.id}`,
+    data,
+  )
 }
 
 const deleteChore = async (id: string): Promise<void> => {
@@ -76,7 +83,7 @@ export const useChore = () => {
 
   const createMutation = useMutation({
     mutationFn: createChore,
-    onSuccess: (data) => {
+    onSuccess: ({ data }) => {
       queryClient.setQueryData(['chores'], (old: Chore[] = []) => {
         return [data, ...old]
       })
@@ -85,7 +92,7 @@ export const useChore = () => {
 
   const updateMutation = useMutation({
     mutationFn: updateChore,
-    onSuccess: (data) => {
+    onSuccess: ({ data }) => {
       queryClient.setQueryData(['chores'], (old: Chore[] = []) => {
         return old.map((chore) =>
           chore.id === data.id

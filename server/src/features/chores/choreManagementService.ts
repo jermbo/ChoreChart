@@ -71,44 +71,7 @@ export class ChoreManagementService {
         .where(eq(chores.id, id))
         .returning();
 
-      // 2. If childAssignments are provided, update them
-      if (data.childAssignments) {
-        // Delete existing assignments
-        await tx
-          .delete(choreAssignments)
-          .where(eq(choreAssignments.choreId, id));
-
-        // Create new assignments
-        const assignments = await Promise.all(
-          data.childAssignments.map(async (assignment) => {
-            const [newAssignment] = await tx
-              .insert(choreAssignments)
-              .values({
-                choreId: id,
-                childId: assignment.childId,
-                status: assignment.status,
-              })
-              .returning();
-            return newAssignment;
-          })
-        );
-
-        return {
-          ...updatedChore,
-          assignments,
-        };
-      }
-
-      // If no assignments provided, return chore with existing assignments
-      const assignments: ChoreAssignment[] = await tx
-        .select()
-        .from(choreAssignments)
-        .where(eq(choreAssignments.choreId, id));
-
-      return {
-        ...updatedChore,
-        assignments,
-      };
+      return updatedChore;
     });
   }
 
