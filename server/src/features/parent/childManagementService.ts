@@ -1,19 +1,8 @@
-import { eq } from "drizzle-orm";
-import {
-  allowanceTransactions,
-  children,
-  chores,
-  users,
-  choreAssignments,
-} from "../../db/schema.js";
+import { eq, sql } from "drizzle-orm";
+import { children, users } from "../../db/schema.js";
 import { db } from "../../db/index.js";
 import type { createChildData, updateChildData } from "./childSchema.js";
 import bcrypt from "bcrypt";
-import type { InferSelectModel } from "drizzle-orm";
-
-type Chore = InferSelectModel<typeof chores>;
-type ChoreAssignment = InferSelectModel<typeof choreAssignments>;
-type AllowanceTransaction = InferSelectModel<typeof allowanceTransactions>;
 
 export class childManagementService {
   async checkIfExisting(email: string) {
@@ -71,7 +60,7 @@ export class childManagementService {
         id: children.id,
         userId: children.userId,
         parentId: children.parentId,
-        baseAllowance: children.baseAllowance,
+        baseAllowance: sql<number>`CAST(${children.baseAllowance} AS FLOAT)`,
         avatarUrl: children.avatarUrl,
         createdAt: children.createdAt,
         updatedAt: children.updatedAt,
@@ -83,63 +72,52 @@ export class childManagementService {
       .innerJoin(users, eq(children.userId, users.id))
       .where(eq(children.parentId, parentId));
 
-    // For each child, get their chores and allowance transactions
-    const childrenWithDetails = await Promise.all(
-      childrenList.map(async (child) => {
-        // Get chores
-        const childChores = await db
-          .select({
-            id: chores.id,
-            title: chores.title,
-            description: chores.description,
-            value: chores.value,
-            dueDate: chores.dueDate,
-            status: choreAssignments.status,
-          })
-          .from(choreAssignments)
-          .innerJoin(chores, eq(choreAssignments.choreId, chores.id))
-          .where(eq(choreAssignments.childId, child.id));
-
-        // Get allowance transactions
-        const transactions = await db
-          .select()
-          .from(allowanceTransactions)
-          .where(eq(allowanceTransactions.childId, child.id));
-
-        return {
-          ...child,
-          chores: childChores,
-          allowanceTransactions: transactions,
-        };
-      })
-    );
-
-    return childrenWithDetails;
+    return childrenList;
   }
 
   async updateChild(data: updateChildData) {
-    //fetch child for the data id
-    const childDetailsFromDb = await db
-      .select()
-      .from(children)
-      .where(eq(children.id, data.id));
+    // Start a transaction to update both tables
+    return await db.transaction(async (tx) => {
+      // First get the child to get the userId
+      const [childDetails] = await tx
+        .select()
+        .from(children)
+        .where(eq(children.id, data.id));
 
-    //update child variable with data details
-    const updatedData = {
-      ...childDetailsFromDb,
-      baseAllowance: data.baseAllowance.toFixed(2),
-      email: data.email,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      updatedAt: new Date(),
-    };
+      if (!childDetails) {
+        throw new Error("Child not found");
+      }
 
-    const child = await db
-      .update(children)
-      .set(updatedData)
-      .where(eq(children.id, data.id))
-      .returning();
-    return child;
+      // Update the user details
+      const [updatedUser] = await tx
+        .update(users)
+        .set({
+          email: data.email,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          updatedAt: new Date(),
+        })
+        .where(eq(users.id, childDetails.userId))
+        .returning();
+
+      // Update the child details
+      const [updatedChild] = await tx
+        .update(children)
+        .set({
+          baseAllowance: sql<number>`CAST(${data.baseAllowance} AS FLOAT)`,
+          updatedAt: new Date(),
+        })
+        .where(eq(children.id, data.id))
+        .returning();
+
+      // Return combined data
+      return {
+        ...updatedChild,
+        email: updatedUser.email,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+      };
+    });
   }
 
   async deleteChild(id: string) {

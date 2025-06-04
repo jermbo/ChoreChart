@@ -23,12 +23,16 @@ const getChildren = async (
   )
 }
 
-const createChild = async (data: CreateChildData): Promise<Child> => {
-  return api.post<Child>('/createchild', data)
+const createChild = async (
+  data: CreateChildData,
+): Promise<{ success: boolean; data: Child }> => {
+  return api.post<{ success: boolean; data: Child }>('/createchild', data)
 }
 
-const updateChild = async (data: UpdateChildData): Promise<Child> => {
-  return api.put<Child>(`/updatechild`, data)
+const updateChild = async (
+  data: UpdateChildData,
+): Promise<{ success: boolean; data: Child }> => {
+  return api.put<{ success: boolean; data: Child }>(`/updatechild`, data)
 }
 
 const deleteChild = async (id: string): Promise<void> => {
@@ -56,22 +60,32 @@ export const useChild = (parentId: string | undefined) => {
 
   const createMutation = useMutation({
     mutationFn: createChild,
-    onSuccess: (data) => {
+    onSuccess: ({ data }) => {
       queryClient.setQueryData(['children', parentId], (old: Child[]) => {
         return [...old, data]
       })
     },
     onError: (error) => {
-      console.log('error', error)
       console.error('Error creating child:', error)
     },
   })
 
   const updateMutation = useMutation({
     mutationFn: updateChild,
-    onSuccess: (data) => {
+    onSuccess: ({ data }) => {
       queryClient.setQueryData(['children', parentId], (old: Child[]) => {
-        return old.map((child) => (child.id === data.id ? data : child))
+        return old.map((child) => {
+          if (child.id != data.id) {
+            return child
+          }
+          let updatedChildData = { ...child }
+          // updatedChildData.baseAllowance = data.baseAllowance
+          updatedChildData.firstName = data.firstName
+          updatedChildData.lastName = data.lastName
+          updatedChildData.password = data.password
+          updatedChildData.email = data.email
+          return updatedChildData
+        })
       })
     },
   })
