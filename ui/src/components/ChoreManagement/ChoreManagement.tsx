@@ -9,7 +9,7 @@ import { formatDate } from '@/utility/utils'
 export const ChoreManagement: React.FC = () => {
   const router = useRouter()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [selectedChore, setSelectedChore] = useState<Chore | undefined>()
+  const [selectedChore, setSelectedChore] = useState<Chore | undefined | null>()
   const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false)
   const [selectedChoreForAssignment, setSelectedChoreForAssignment] = useState<
     Chore | undefined
@@ -26,7 +26,7 @@ export const ChoreManagement: React.FC = () => {
   } = useChore()
 
   const handleAddChore = () => {
-    setSelectedChore(undefined)
+    setSelectedChore(null)
     setIsDialogOpen(true)
   }
 

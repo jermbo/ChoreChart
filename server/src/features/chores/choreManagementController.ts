@@ -48,14 +48,7 @@ export const createChore = async (context: Context) => {
     }
 
     const chore = await choreService.createChore(validationResult.data);
-    return successResponse(
-      context,
-      {
-        message: "Chore created successfully with assignments",
-        chore,
-      },
-      201
-    );
+    return successResponse(context, chore, 201);
   } catch (error: unknown) {
     console.error("Chore creation error:", error);
     return errorResponse(
