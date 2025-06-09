@@ -21,43 +21,30 @@ const getAllChores = async (): Promise<Chore[]> => {
   return response.success ? response.data : []
 }
 
-// const getAssignments = async (): Promise<{
-//   assignments: ChoreAssignment[]
-// }> => {
-//   return api.get('/chores/assignments')
-// }
-
 const createChore = async (
   data: CreateChoreData,
 ): Promise<{ success: boolean; data: Chore }> => {
-  return api.post<{ success: boolean; data: Chore }>('/createchore', data)
+  return await api.post<{ success: boolean; data: Chore }>('/createchore', data)
 }
 
 const updateChore = async (
   data: UpdateChoreData,
 ): Promise<{ success: boolean; data: Chore }> => {
-  return api.put<{ success: boolean; data: Chore }>(
+  return await api.put<{ success: boolean; data: Chore }>(
     `/updatechore/${data.id}`,
     data,
   )
 }
 
 const deleteChore = async (id: string): Promise<void> => {
-  return api.delete(`/deletechore/${id}`)
+  return await api.delete(`/deletechore/${id}`)
 }
 
 const assignChore = async (
   choreId: string,
   childIds: string[],
 ): Promise<ChoreAssignment> => {
-  return api.post(`/assignchore`, { choreId, childIds })
-}
-
-const unassignChore = async (
-  choreId: string,
-  childId: string,
-): Promise<void> => {
-  return api.delete(`/chores/${choreId}/assign/${childId}`)
+  return await api.post(`/assignchore`, { choreId, childIds })
 }
 
 export const useChore = () => {
@@ -72,14 +59,6 @@ export const useChore = () => {
       return chores
     },
   })
-
-  // const { data: assignmentsData, isLoading: isLoadingAssignments } = useQuery({
-  //   queryKey: ['choreAssignments'],
-  //   queryFn: async () => {
-  //     const result = await getAssignments()
-  //     return result.assignments
-  //   },
-  // })
 
   const createMutation = useMutation({
     mutationFn: createChore,
@@ -136,25 +115,6 @@ export const useChore = () => {
     },
   })
 
-  const unassignMutation = useMutation({
-    mutationFn: ({ choreId, childId }: { choreId: string; childId: string }) =>
-      unassignChore(choreId, childId),
-    onSuccess: (_, { choreId, childId }) => {
-      queryClient.setQueryData(
-        ['choreAssignments'],
-        (old: ChoreAssignment[] = []) => {
-          return old.filter(
-            (assignment) =>
-              !(
-                assignment.chore_id === choreId &&
-                assignment.child_id === childId
-              ),
-          )
-        },
-      )
-    },
-  })
-
   return {
     chores: chores || [],
     // assignments: assignmentsData || [],
@@ -163,7 +123,6 @@ export const useChore = () => {
     updateChore: updateMutation.mutate,
     deleteChore: deleteMutation.mutate,
     assignChore: assignMutation.mutate,
-    unassignChore: unassignMutation.mutate,
     isCreating: createMutation.isPending,
     isUpdating: updateMutation.isPending,
     isDeleting: deleteMutation.isPending,

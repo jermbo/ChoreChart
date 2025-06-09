@@ -44,10 +44,10 @@ export const ChildForm: React.FC<ChildFormProps> = ({
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
-    const { name, value } = e.target
+    const { name, value, type } = e.target
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'number' ? Number(value) : value,
     }))
   }
 

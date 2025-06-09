@@ -50,6 +50,7 @@ export class childManagementService {
         email: newUser.email,
         firstName: newUser.firstName,
         lastName: newUser.lastName,
+        baseAllowance: Number(newChild.baseAllowance),
       };
     });
   }
@@ -117,6 +118,7 @@ export class childManagementService {
         email: updatedUser.email,
         firstName: updatedUser.firstName,
         lastName: updatedUser.lastName,
+        baseAllowance: Number(updatedChild.baseAllowance),
       };
     });
   }

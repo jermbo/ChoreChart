@@ -18,7 +18,7 @@ interface UpdateChildData extends Partial<CreateChildData> {
 const getChildren = async (
   parentId: string,
 ): Promise<{ success: boolean; data: Child[] }> => {
-  return api.get<{ success: boolean; data: Child[] }>(
+  return await api.get<{ success: boolean; data: Child[] }>(
     `/getchildrenwithdetails?parentId=${parentId}`,
   )
 }
@@ -26,18 +26,17 @@ const getChildren = async (
 const createChild = async (
   data: CreateChildData,
 ): Promise<{ success: boolean; data: Child }> => {
-  console.log({ data })
-  return api.post<{ success: boolean; data: Child }>('/createchild', data)
+  return await api.post<{ success: boolean; data: Child }>('/createchild', data)
 }
 
 const updateChild = async (
   data: UpdateChildData,
 ): Promise<{ success: boolean; data: Child }> => {
-  return api.put<{ success: boolean; data: Child }>(`/updatechild`, data)
+  return await api.put<{ success: boolean; data: Child }>(`/updatechild`, data)
 }
 
 const deleteChild = async (id: string): Promise<void> => {
-  return api.delete(`/deletechild/${id}`)
+  return await api.delete(`/deletechild/${id}`)
 }
 
 export const useChild = (parentId: string | undefined) => {

@@ -28,6 +28,14 @@ const ChildDashboard: React.FC = () => {
     return chores.filter((chore) => chore.status === selectedStatus)
   }, [chores, selectedStatus])
 
+  // Calculate total allowance earned from verified chores
+  const totalAllowanceEarned = useMemo(() => {
+    if (!chores) return 0
+    return chores
+      .filter((chore) => chore.status === 'verified')
+      .reduce((total, chore) => total + Number(chore.value), 0)
+  }, [chores])
+
   const handleHome = () => {
     router.navigate({ to: '/', search: { message: undefined } })
   }
@@ -63,7 +71,12 @@ const ChildDashboard: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">My Chores</h1>
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">My Chores</h1>
+          <p className="mt-2 text-lg text-gray-600">
+            Total Allowance Earned: ${totalAllowanceEarned.toFixed(2)}
+          </p>
+        </div>
         <button
           onClick={handleHome}
           className="px-4 py-2 bg-gradient-to-r from-pastel-blue-500 to-pastel-pink-400 text-white rounded-md hover:from-pastel-blue-600 hover:to-pastel-pink-500"
