@@ -26,7 +26,6 @@ const getChildren = async (
 const createChild = async (
   data: CreateChildData,
 ): Promise<{ success: boolean; data: Child }> => {
-  console.log({ data })
   return api.post<{ success: boolean; data: Child }>('/createchild', data)
 }
 
