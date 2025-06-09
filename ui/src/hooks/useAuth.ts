@@ -24,12 +24,11 @@ interface AuthResponse {
 const loginUser = async (
   credentials: LoginCredentials,
 ): Promise<AuthResponse> => {
-  const response = await api.post<AuthResponse>('/login', credentials)
-  return response
+  return await api.post<AuthResponse>('/login', credentials)
 }
 
 const registerParent = async (data: RegisterData): Promise<AuthResponse> => {
-  return api.post<AuthResponse>('/register', { ...data, role: 'parent' })
+  return await api.post<AuthResponse>('/register', { ...data, role: 'parent' })
 }
 
 export const useAuth = () => {

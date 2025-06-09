@@ -27,7 +27,7 @@ const updateChoreStatus = async (
   assignmentId: string | undefined,
   status: Chore['status'],
 ): Promise<any> => {
-  return api.put(`/updateChoreStatus/${choreId}`, {
+  return await api.put(`/updateChoreStatus/${choreId}`, {
     assignmentId,
     status,
   })
