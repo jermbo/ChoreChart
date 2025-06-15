@@ -17,3 +17,149 @@ code {
   font-family:
     source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+:root {
+  --red: #e51c5a;
+  --orange: #ed7d2d;
+  --green: #a9bd4d;
+  --teal: #8fd1c2;
+  --pink: #f496b9;
+  --purple: #5e40af;
+  --blue: #1c5ca5;
+  --bg: #fbe6d3;
+  --gray: #4f4f4f;
+  --white: #f5f5f5;
+}
+
+/* Stylized Heading */
+.headline {
+  font-size: clamp(2rem, 10vw, 6rem);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.cursive {
+  font-size: inherit;
+  font-family: 'Dancing Script', cursive;
+  color: var(--gray);
+  mix-blend-mode: darken;
+}
+
+.block {
+  font-size: inherit;
+  font-family: 'Oswald', sans-serif;
+  position: relative;
+  display: flex;
+  color: var(--bg);
+  text-transform: uppercase;
+}
+
+.block span {
+  position: relative;
+  text-transform: uppercase;
+  text-shadow:
+    -1px -1px 0 var(--purple),
+    1px -1px 0 var(--purple),
+    -1px 1px 0 var(--purple),
+    1px 1px 0 var(--purple);
+}
+
+.block span:after {
+  content: attr(data-heading);
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  transform: translate(0.5vw, 0.3vh);
+  mix-blend-mode: darken;
+  opacity: 0.5;
+}
+.block span:nth-child(1n + 1):after {
+  color: var(--red);
+}
+.block span:nth-child(2n + 2):after {
+  color: var(--orange);
+}
+.block span:nth-child(3n + 3):after {
+  color: var(--green);
+}
+.block span:nth-child(4n + 4):after {
+  color: var(--teal);
+}
+.block span:nth-child(5n + 5):after {
+  color: var(--pink);
+}
+.block span:nth-child(6n + 6):after {
+  color: var(--purple);
+}
+.block span:nth-child(7n + 7):after {
+  color: var(--blue);
+}
+
+/* ----------------------------------- */
+/* Check Box */
+.custom-check {
+  position: relative;
+}
+
+.custom-check label {
+  background-color: var(--white);
+  border-radius: 50%;
+  cursor: pointer;
+  height: 28px;
+  width: 28px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.custom-check label:after {
+  position: absolute;
+  border: 2px solid var(--white);
+  border-top: none;
+  border-right: none;
+  content: '';
+  height: 6px;
+  left: 7px;
+  top: 8px;
+  transform: rotate(-45deg);
+  width: 12px;
+}
+
+.custom-check input:checked + label {
+  --color: var(--red);
+  background-color: var(--color);
+  border-color: var(--color);
+}
+
+.custom-check.monday input + label {
+  --color: var(--red);
+}
+.custom-check.tuesday input + label {
+  --color: var(--orange);
+}
+.custom-check.wednesday input + label {
+  --color: var(--green);
+}
+.custom-check.thursday input + label {
+  --color: var(--teal);
+}
+.custom-check.friday input + label {
+  --color: var(--pink);
+}
+.custom-check.saturday input + label {
+  --color: var(--purple);
+}
+.custom-check.sunday input + label {
+  --color: var(--blue);
+}
+
+table {
+  width: 100%;
+}
+
+th {
+  text-align: left;
+}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 import { useRouter, useSearch } from '@tanstack/react-router'
+import StylizedHeading from '../Common/StylizedHeading'
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('')
@@ -22,9 +23,7 @@ const Login: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pastel-blue-400 via-pastel-pink-300 to-pastel-pink-500">
       <div className="bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center mb-2 bg-gradient-to-r from-pastel-blue-500 to-pastel-pink-400 bg-clip-text text-transparent">
-          Welcome to ChoreChart
-        </h1>
+        <StylizedHeading text="Daily Chores" />
         <p className="text-center text-gray-600 mb-8">
           Please login to continue
         </p>
