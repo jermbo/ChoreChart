@@ -5,10 +5,7 @@ import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    TanStackRouterVite({ autoCodeSplitting: true }),
-    react(),
-  ],
+  plugins: [TanStackRouterVite({ autoCodeSplitting: true }), react()],
   test: {
     globals: true,
     environment: 'jsdom',
@@ -21,5 +18,8 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 3000,
+  },
+  css: {
+    postcss: './postcss.config.js',
   },
 })
