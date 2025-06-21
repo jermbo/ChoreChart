@@ -22,8 +22,8 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pastel-blue-400 via-pastel-pink-300 to-pastel-pink-500">
-      <div className="bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-md">
-        <StylizedHeading text="Daily Chores" />
+      <div className="bg-white/95 backdrop-blur-sm p-8 rounded-2xl shadow-2xl">
+        <StylizedHeading text="daily Chores" />
         <p className="text-center text-gray-600 mb-8">
           Please login to continue
         </p>
