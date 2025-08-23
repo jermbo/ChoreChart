@@ -3,9 +3,11 @@ import { useChild } from '../../hooks/useChild'
 import type { Child } from '../../types'
 import { useUserContext } from '../../context/userContext'
 import { ChildDialog } from './ChildDialog'
+import { useRouter } from '@tanstack/react-router'
 
 export const ChildManagement: React.FC = () => {
   const { user } = useUserContext()
+  const router = useRouter()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingChild, setEditingChild] = useState<Child | null>(null)
   const {
@@ -63,8 +65,18 @@ export const ChildManagement: React.FC = () => {
     return <div>Loading children...</div>
   }
 
+  const handleBackToDashboard = () => {
+    router.navigate({ to: '/parentDashboard' })
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 m-16">
+      <button
+        onClick={handleBackToDashboard}
+        className="mb-4 px-4 py-2 bg-gradient-to-r from-pastel-blue-500 to-pastel-pink-400 text-white rounded-md hover:from-pastel-blue-600 hover:to-pastel-pink-500"
+      >
+        Back to dashboard
+      </button>
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Child Management</h2>
         <button

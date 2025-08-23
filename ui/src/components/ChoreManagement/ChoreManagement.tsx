@@ -101,8 +101,13 @@ export const ChoreManagement: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <button onClick={handleBackToDashboard}>Back to dashboard</button>
+    <div className="space-y-6  m-16">
+      <button
+        onClick={handleBackToDashboard}
+        className="mb-4 px-4 py-2 bg-gradient-to-r from-pastel-blue-500 to-pastel-pink-400 text-white rounded-md hover:from-pastel-blue-600 hover:to-pastel-pink-500"
+      >
+        Back to dashboard
+      </button>
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Chore Management</h2>
         <button
